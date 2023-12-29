@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesamiento de Imagenes</title>
+    <link rel="stylesheet" href="style/index.css">
+</head>
+<body>
+    
+    <section class="container">
+        <header class="header">
+        
+            <ul class="nav">
+                <li><span>INICIO</span>
+                    <ul>           
+                        <li><label for="files" > Abrir archvivo</label></li>
+                        
+                    </ul>
+                </li>
+                <li><span>Efectos básicos</span>
+                    <ul>           
+                        <li><span id="op-gris">Grises</span></li>
+                        
+                    </ul>
+                </li>
+                <li><span>Efectos Intermedios</span>
+                    <ul>
+                        <li><span id="op-e1">efecto1</span></li>
+                        
+                    </ul>
+                </li>
+                <li><span>Efectos Avanzados</span>
+                    <ul>
+                        <li><span id="op-2">efecto</span></li>
+
+                    </ul>
+                </li>
+                
+            </ul>
+        </header>
+        <section class="img-container1">Imagen 1
+            <div class="item img-item">
+                <canvas id="img1" width="300" height="300" crossorigin="anonymous"> </canvas>
+            </div>
+            <div id="item">
+                <a href="" id="color"> </a> <output id="rgb">RGB:</output>
+            </div>
+            <div class="item">
+                <div class="file-input-wrapper">
+                    <input class="file-input" type="file" id="files" name="files" />
+                    <label for="files" class="file-button">Examinar</label>
+                    <span class="file-name">Elige Archivo</span>
+                  </div>
+               
+            </div>
+            <div class="item">
+                <output id="list"></output>
+            </div>
+        </section> 
+        <section class="img-container2">Imagen 2
+            <div class="item img-item">
+                <canvas id="img2" width="300" height="300"> </canvas>
+            </div>
+            <!-- <div class="item">
+                <button id="gris">Convertir a gris</button>
+            </div> -->
+        </section>
+        <section class="img-container3">Imagen 3</section>
+        <section class="img-container4">Imagen 4
+            <div class="item img-item">
+                <canvas id="img4" width="300" height="300" crossorigin="anonymous"> </canvas>
+            </div>
+            <div class="item">
+
+                <div class="file-input-wrapper">
+                    <input class="file-input" type="file" id="files2" name="files" />
+                    <label for="files2" class="file-button">Examinar</label>
+                    <span class="file-name">Elige Archivo</span>
+                  </div>
+        
+            </div>
+            <div class="item">
+                <output id="list2"></output>
+            </div>
+        </section>
+        <section class="img-container5">Imagen 5</section>
+        <section class="img-container6">Imagen 6</section>
+    </section>
+    <script src="dist/src/index.js"  type="module">
+    
+    </script>
+</body>
+</html>
+
+ 
