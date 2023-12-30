@@ -1,4 +1,3 @@
-var _a;
 import { ImageLocal } from "./ImageLocal.js";
 import { ImageType } from "./ImageType.js";
 import { MathImg } from "./MathImg.js";
@@ -60,17 +59,10 @@ function aplicarDistorsion(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
-
-var vorticeAngle = 0; // Declaracion e inicializacion vorticeAngle
-var vorticeStrength = 0; // Declaracion e inicializacion de vorticeStrength
-var vorticeAnimationId = null;
-function AplicarEfectoVortice(evt) {
-
 var vorticeAngle = 0; // Declaración e inicialización de vorticeAngle
 var vorticeStrength = 0; // Declaración e inicialización de vorticeStrength
 var vorticeAnimationId = null;
-function handleVorticeEffect(evt) {
-
+function AplicarEfectoVortice(evt) {
     if (vorticeAnimationId !== null) {
         cancelAnimationFrame(vorticeAnimationId);
         vorticeAnimationId = null;
@@ -78,11 +70,10 @@ function handleVorticeEffect(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     var centerX = imagenSal.getWidth() / 2;
     var centerY = imagenSal.getHeight() / 2;
-
     vorticeAngle += 0.02;
     vorticeStrength += 0.1;
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
-    // llama otra vez a la funcion para hacer un ciclo de animaciones
+    // bucle animacion
     vorticeAnimationId = requestAnimationFrame(function () { return AplicarEfectoVortice(evt); });
 }
 var wavesAmplitude = 10;
@@ -96,12 +87,10 @@ function AplicarEfectoOndas(evt) {
     // llama otra vez a la funcion para hacer un ciclo de animaciones
     requestAnimationFrame(function () { return AplicarEfectoOndas(evt); });
 }
-
 var zoomScale = 1.0;
 var zoomDirection = 1;
-function handleZoomEffect(evt) {
+function AplicarEfectoZoom(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    // Ajusta la velocidad y el rango según tus preferencias
     var zoomSpeed = 0.01;
     var zoomRange = 0.5;
     zoomScale += zoomDirection * zoomSpeed;
@@ -109,25 +98,8 @@ function handleZoomEffect(evt) {
         zoomDirection *= -1;
     }
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarZoomDinamico(imagenSal, zoomScale));
-    requestAnimationFrame(function () { return handleZoomEffect(evt); });
+    requestAnimationFrame(function () { return AplicarEfectoZoom(evt); });
 }
-
-
-    vorticeAngle += 0.02; // Ajusta la velocidad de rotación según sea necesario
-    vorticeStrength += 0.1; // Ajusta la fuerza del vórtice según sea necesario
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
-    // Llama a la función de nuevo para crear un bucle de animación
-    vorticeAnimationId = requestAnimationFrame(function () { return handleVorticeEffect(evt); });
-}
-// ...
-// 
-function changeEffect(evt) {
-    if (vorticeAnimationId !== null) {
-        cancelAnimationFrame(vorticeAnimationId);
-        vorticeAnimationId = null;
-    } 
-}
-// ...
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -143,7 +115,5 @@ document.getElementById("op-distorsion").addEventListener('click', aplicarDistor
 //Efectos Intermedios
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
-document.getElementById("op-zoom").addEventListener("click", handleZoomEffect, false);
-document.getElementById("op-vortice").addEventListener('click', handleVorticeEffect, false);
-(_a = document.getElementById("stopButton")) === null || _a === void 0 ? void 0 : _a.addEventListener('click', changeEffect, false);
-
+document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
+document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
