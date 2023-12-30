@@ -223,6 +223,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+
     MathImg.aplicarOndas = function (img, amplitude, frequency, offset) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -242,6 +243,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+
     MathImg.aplicarZoomDinamico = function (img, scale) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -264,6 +266,9 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+
+
+
     return MathImg;
 }());
 export { MathImg };
