@@ -6,6 +6,7 @@ import { Particle } from "./particle.js";
 import { ParticleText } from "./particle.js";
 import { CanvasLocal } from './canvasLocal.js';
 
+
 let lienzo1: HTMLCanvasElement;
 let lienzo2: HTMLCanvasElement;
 let lienzo4: HTMLCanvasElement;
@@ -36,10 +37,51 @@ imgLocal.getImage().onload = imgLocal.onload;
 var imgLocal4: ImageLocal = new ImageLocal(pantalla4);
 imgLocal4.getImage().onload = imgLocal4.onload;
 
-function convertirAGris(evt: any): void{
-  var imagenSal:ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.toGray(imagenSal));
+
+function aplicarDesenfoque(evt: any): void {
+  // Puedes ajustar el radio del desenfoque según tus necesidades
+  const radioDesenfoque = 1; 
+  var imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
 }
+
+function pixelearImagen(evt: any): void {
+  const blockSize = 10; // Tamaño del bloque, ajusta según sea necesario
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.pixelear(imagenSal, blockSize));
+}
+function aplicarEfectoSepia(evt: any): void {
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSepia(imagenSal));
+}
+function aplicarEfectoGlitch(evt: any): void {
+  const blockSize = 20; // Puedes ajustar el tamaño del bloque según sea necesario
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
+}
+function aplicarDestelloDeFoco(evt: any): void {
+  const valorIngresado = prompt('Ingrese el valor numérico para el destello de foco (entre 10 y 100):');
+  
+  if (valorIngresado !== null) {
+    const size = Math.min(100, Math.max(10, parseInt(valorIngresado, 10))) || 50;
+
+    const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDestelloDeFoco(imagenSal, size));
+  }
+}
+
+function aplicarDistorsion(evt: any): void {
+  // Puedes ajustar el factor de distorsión según tus necesidades
+  const factorDistorsion = 0.5;
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
+}
+
+
+
+
+
+
 //
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
@@ -48,4 +90,15 @@ dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', imgLocal.handleFileSelect, false);
 
 //Filtros basicos
-document.getElementById("op-gris").addEventListener('click', convertirAGris, false);
+
+document.getElementById("op-desenfoque").addEventListener('click', aplicarDesenfoque, false);
+document.getElementById("op-pixelate").addEventListener('click', pixelearImagen, false);
+document.getElementById("op-sepia").addEventListener('click', aplicarEfectoSepia, false);
+document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlitch, false);
+document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
+document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
+
+
+
+// Agrega un evento para la opción de burbujas
+

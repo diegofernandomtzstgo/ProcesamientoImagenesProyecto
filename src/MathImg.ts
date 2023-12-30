@@ -15,22 +15,235 @@ export class MathImg {
     }
     return arrImage;
   }
-  public static toGray(img: ImageType): number[][][] {
-    //variable que guarda el arreglo 3d de la imagen de color
+  
+  //Aqui van mas
+  public static aplicarDesenfoque(img: ImageType, radio: number): number[][][] {
     var arrImage = img.getArrayImg();
-    //variable donde guardamos la salida
     var sal = this.initArray(img.getWidth(), img.getHeight());
 
-    var prom;
     for (let i = 0; i < img.getHeight(); i++) {
-      for (let j = 0; j < img.getWidth(); j++) {
-        //0.299 + 0.587G + 0.114B.
-        prom = (0.299 * arrImage[0][i][j] + 0.587 * arrImage[1][i][j] + 0.114 * arrImage[2][i][j]);
-        sal[0][i][j] = prom;
-        sal[1][i][j] = prom;
-        sal[2][i][j] = prom;
+        for (let j = 0; j < img.getWidth(); j++) {
+            const pixel = this.aplicarDesenfoqueEnPixel(arrImage, i, j, radio);
+            sal[0][i][j] = pixel[0];
+            sal[1][i][j] = pixel[1];
+            sal[2][i][j] = pixel[2];
+        }
+    }
+
+    return sal;
+}
+
+private static aplicarDesenfoqueEnPixel(arrImage: number[][][], x: number, y: number, radio: number): number[] {
+    const pixel = [0, 0, 0];
+
+    for (let i = -radio; i <= radio; i++) {
+        for (let j = -radio; j <= radio; j++) {
+            const currentX = Math.min(Math.max(x + i, 0), arrImage[0].length - 1);
+            const currentY = Math.min(Math.max(y + j, 0), arrImage.length - 1);
+
+            pixel[0] += arrImage[0][currentX][currentY];
+            pixel[1] += arrImage[1][currentX][currentY];
+            pixel[2] += arrImage[2][currentX][currentY];
+        }
+    }
+
+    const totalPixels = (2 * radio + 1) ** 2;
+
+    
+    const factorReduccion = 2; 
+    pixel[0] /= totalPixels * factorReduccion;
+    pixel[1] /= totalPixels * factorReduccion;
+    pixel[2] /= totalPixels * factorReduccion;
+
+    return pixel;
+}
+//Mejorar Imagen
+public static pixelear(img: ImageType, blockSize: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i += blockSize) {
+    for (let j = 0; j < width; j += blockSize) {
+      const blockSum = [0, 0, 0];
+
+      for (let x = 0; x < blockSize; x++) {
+        for (let y = 0; y < blockSize; y++) {
+          const pixelX = i + x;
+          const pixelY = j + y;
+
+          if (pixelX < height && pixelY < width) {
+            blockSum[0] += arrImage[0][pixelX][pixelY];
+            blockSum[1] += arrImage[1][pixelX][pixelY];
+            blockSum[2] += arrImage[2][pixelX][pixelY];
+          }
+        }
+      }
+
+      const blockAvg = [
+        blockSum[0] / (blockSize * blockSize),
+        blockSum[1] / (blockSize * blockSize),
+        blockSum[2] / (blockSize * blockSize)
+      ];
+
+      for (let x = 0; x < blockSize; x++) {
+        for (let y = 0; y < blockSize; y++) {
+          const pixelX = i + x;
+          const pixelY = j + y;
+
+          if (pixelX < height && pixelY < width) {
+            sal[0][pixelX][pixelY] = blockAvg[0];
+            sal[1][pixelX][pixelY] = blockAvg[1];
+            sal[2][pixelX][pixelY] = blockAvg[2];
+          }
+        }
       }
     }
-    return sal;
   }
+
+  return sal;
 }
+
+public static aplicarEfectoSepia(img: ImageType): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const pixel = this.aplicarEfectoSepiaEnPixel(arrImage, i, j);
+      sal[0][i][j] = pixel[0];
+      sal[1][i][j] = pixel[1];
+      sal[2][i][j] = pixel[2];
+    }
+  }
+
+  return sal;
+}
+
+private static aplicarEfectoSepiaEnPixel(arrImage: number[][][], x: number, y: number): number[] {
+  const pixel = [0, 0, 0];
+
+  const r = arrImage[0][x][y];
+  const g = arrImage[1][x][y];
+  const b = arrImage[2][x][y];
+
+  // Fórmulas para el efecto sepia
+  pixel[0] = Math.min(255, 0.393 * r + 0.769 * g + 0.150 * b);
+  pixel[1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
+  pixel[2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
+
+  return pixel;
+}
+public static aplicarEfectoGlitch(img: ImageType, blockSize: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i += blockSize) {
+    for (let j = 0; j < width; j += blockSize) {
+      const isGlitch = Math.random() < 0.3;
+
+      if (isGlitch) {
+        const displacement = Math.floor(Math.random() * (blockSize * 2) - blockSize);
+        const glitchWidth = Math.min(blockSize + displacement, width - j);
+        const glitchHeight = Math.min(blockSize + displacement, height - i);
+
+        for (let x = 0; x < glitchHeight; x++) {
+          for (let y = 0; y < glitchWidth; y++) {
+            const pixelX = i + x;
+            const pixelY = j + y;
+
+            const glitchColor = [
+              Math.random() * 255,   // Red channel
+              Math.random() * 255,   // Green channel
+              Math.random() * 255    // Blue channel
+            ];
+
+            const alpha = Math.random() * 0.5 + 0.5; // Translucency
+
+            sal[0][pixelX][pixelY] = (1 - alpha) * arrImage[0][pixelX][pixelY] + alpha * glitchColor[0];
+            sal[1][pixelX][pixelY] = (1 - alpha) * arrImage[1][pixelX][pixelY] + alpha * glitchColor[1];
+            sal[2][pixelX][pixelY] = (1 - alpha) * arrImage[2][pixelX][pixelY] + alpha * glitchColor[2];
+          }
+        }
+      } else {
+        for (let x = 0; x < blockSize; x++) {
+          for (let y = 0; y < blockSize; y++) {
+            const pixelX = i + x;
+            const pixelY = j + y;
+
+            if (pixelX < height && pixelY < width) {
+              sal[0][pixelX][pixelY] = arrImage[0][pixelX][pixelY];
+              sal[1][pixelX][pixelY] = arrImage[1][pixelX][pixelY];
+              sal[2][pixelX][pixelY] = arrImage[2][pixelX][pixelY];
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return sal;
+}
+public static aplicarDestelloDeFoco(img: ImageType, size: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const distanceToCenter = Math.sqrt((i - centerY) ** 2 + (j - centerX) ** 2);
+      const intensity = 1 - Math.min(1, distanceToCenter / size);
+      const pixel = this.aplicarDestelloDeFocoEnPixel(arrImage, i, j, intensity);
+      sal[0][i][j] = pixel[0];
+      sal[1][i][j] = pixel[1];
+      sal[2][i][j] = pixel[2];
+    }
+  }
+
+  return sal;
+}
+
+private static aplicarDestelloDeFocoEnPixel(arrImage: number[][][], x: number, y: number, intensity: number): number[] {
+  const pixel = [0, 0, 0];
+
+  for (let c = 0; c < 3; c++) {
+    pixel[c] = arrImage[c][x][y] + intensity * 255;
+  }
+
+  return pixel;
+}
+
+public static aplicarDistorsion(img: ImageType, factor: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const newX = Math.floor(j + Math.sin(i * factor) * factor * 10);
+      const newY = Math.floor(i + Math.sin(j * factor) * factor * 10);
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j] = arrImage[0][newY][newX];
+        sal[1][i][j] = arrImage[1][newY][newX];
+        sal[2][i][j] = arrImage[2][newY][newX];
+      }
+    }
+  }
+
+  return sal;
+}
+
+
+}
+
