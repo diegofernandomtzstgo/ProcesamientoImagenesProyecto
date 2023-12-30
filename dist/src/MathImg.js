@@ -244,6 +244,31 @@ var MathImg = /** @class */ (function () {
         return sal;
     };
 
+    MathImg.aplicarZoomDinamico = function (img, scale) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        var centerX = width / 2;
+        var centerY = height / 2;
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var offsetX = j - centerX;
+                var offsetY = i - centerY;
+                var newX = centerX + offsetX * scale;
+                var newY = centerY + offsetY * scale;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+                }
+            }
+        }
+        return sal;
+    };
+
+
+
     return MathImg;
 }());
 export { MathImg };

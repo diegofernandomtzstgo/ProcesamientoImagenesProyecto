@@ -97,6 +97,22 @@ function AplicarEfectoOndas(evt) {
     requestAnimationFrame(function () { return AplicarEfectoOndas(evt); });
 }
 
+var zoomScale = 1.0;
+var zoomDirection = 1;
+function handleZoomEffect(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    // Ajusta la velocidad y el rango según tus preferencias
+    var zoomSpeed = 0.01;
+    var zoomRange = 0.5;
+    zoomScale += zoomDirection * zoomSpeed;
+    if (zoomScale > 1 + zoomRange || zoomScale < 1 - zoomRange) {
+        zoomDirection *= -1;
+    }
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarZoomDinamico(imagenSal, zoomScale));
+    requestAnimationFrame(function () { return handleZoomEffect(evt); });
+}
+
+
     vorticeAngle += 0.02; // Ajusta la velocidad de rotación según sea necesario
     vorticeStrength += 0.1; // Ajusta la fuerza del vórtice según sea necesario
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
@@ -104,16 +120,14 @@ function AplicarEfectoOndas(evt) {
     vorticeAnimationId = requestAnimationFrame(function () { return handleVorticeEffect(evt); });
 }
 // ...
-// Cuando cambies de efecto, detén la animación del vórtice
+// 
 function changeEffect(evt) {
     if (vorticeAnimationId !== null) {
         cancelAnimationFrame(vorticeAnimationId);
         vorticeAnimationId = null;
-    }
-    // Resto del código para cambiar el efecto...
+    } 
 }
 // ...
-
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -127,9 +141,9 @@ document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlit
 document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
 document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
 //Efectos Intermedios
-
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
-
+document.getElementById("op-zoom").addEventListener("click", handleZoomEffect, false);
 document.getElementById("op-vortice").addEventListener('click', handleVorticeEffect, false);
 (_a = document.getElementById("stopButton")) === null || _a === void 0 ? void 0 : _a.addEventListener('click', changeEffect, false);
+
