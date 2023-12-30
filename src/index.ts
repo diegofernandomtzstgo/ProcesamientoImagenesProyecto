@@ -114,6 +114,30 @@ function AplicarEfectoOndas(evt: any): void {
   requestAnimationFrame(() => AplicarEfectoOndas(evt));
 }
 
+let zoomScale = 1.0;
+let zoomDirection = 1;
+
+function handleZoomEffect(evt: any): void {
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+
+  // Ajusta la velocidad y el rango según tus preferencias
+  const zoomSpeed = 0.01;
+  const zoomRange = 0.5;
+
+  zoomScale += zoomDirection * zoomSpeed;
+
+  if (zoomScale > 1 + zoomRange || zoomScale < 1 - zoomRange) {
+    zoomDirection *= -1;
+  }
+
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarZoomDinamico(imagenSal, zoomScale));
+
+  requestAnimationFrame(() => handleZoomEffect(evt));
+}
+
+
+
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -130,4 +154,4 @@ document.getElementById("op-distorsion").addEventListener('click', aplicarDistor
 //Efectos Intermedios
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
-
+document.getElementById("op-zoom").addEventListener("click", handleZoomEffect, false);

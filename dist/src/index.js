@@ -87,6 +87,20 @@ function AplicarEfectoOndas(evt) {
     // llama otra vez a la funcion para hacer un ciclo de animaciones
     requestAnimationFrame(function () { return AplicarEfectoOndas(evt); });
 }
+var zoomScale = 1.0;
+var zoomDirection = 1;
+function handleZoomEffect(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    // Ajusta la velocidad y el rango según tus preferencias
+    var zoomSpeed = 0.01;
+    var zoomRange = 0.5;
+    zoomScale += zoomDirection * zoomSpeed;
+    if (zoomScale > 1 + zoomRange || zoomScale < 1 - zoomRange) {
+        zoomDirection *= -1;
+    }
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarZoomDinamico(imagenSal, zoomScale));
+    requestAnimationFrame(function () { return handleZoomEffect(evt); });
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -102,3 +116,4 @@ document.getElementById("op-distorsion").addEventListener('click', aplicarDistor
 //Efectos Intermedios
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
+document.getElementById("op-zoom").addEventListener("click", handleZoomEffect, false);
