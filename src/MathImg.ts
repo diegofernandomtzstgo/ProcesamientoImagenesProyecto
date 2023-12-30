@@ -250,6 +250,7 @@ public static aplicarVortice(img: ImageType, centerX: number, centerY: number, s
   const cosA = Math.cos(angle);
   const sinA = Math.sin(angle);
 
+
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
       const deltaX = j - centerX;
@@ -272,6 +273,45 @@ public static aplicarVortice(img: ImageType, centerX: number, centerY: number, s
 }
 
 
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const deltaX = j - centerX;
+      const deltaY = i - centerY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
+      const angleOffset = strength * Math.exp(-distance / 1000) * Math.PI / 180;
+      const newX = cosA * deltaX - sinA * deltaY + centerX;
+      const newY = sinA * deltaX + cosA * deltaY + centerY;
 
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+        sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+        sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+      }
+    }
+  }
+
+  return sal;
+}
+public static aplicarOndas(img: ImageType, amplitude: number, frequency: number, offset: number): number[][][] {
+  const arrImage=img.getArrayImg();
+  const width=img.getWidth();
+  const height=img.getHeight();
+  const sal=this.initArray(width, height);
+
+  for (let i=0; i<height; i++) {
+    for (let j =0; j<width; j++) {
+      const yOffset = amplitude * Math.sin((j / width) * 2 * Math.PI * frequency + offset);
+      const newX = j;
+      const newY = i + yOffset;
+
+      if (newY >= 0 && newY < height) {
+        sal[0][i][j]=arrImage[0][Math.floor(newY)][newX];
+        sal[1][i][j]=arrImage[1][Math.floor(newY)][newX];
+        sal[2][i][j]=arrImage[2][Math.floor(newY)][newX];
+      }
+    }
+  }
+  return sal;
+}
 }

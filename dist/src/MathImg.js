@@ -223,6 +223,27 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+
+    MathImg.aplicarOndas = function (img, amplitude, frequency, offset) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var yOffset = amplitude * Math.sin((j / width) * 2 * Math.PI * frequency + offset);
+                var newX = j;
+                var newY = i + yOffset;
+                if (newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][newX];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][newX];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][newX];
+                }
+            }
+        }
+        return sal;
+    };
+
     return MathImg;
 }());
 export { MathImg };

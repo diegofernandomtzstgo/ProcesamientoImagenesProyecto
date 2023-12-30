@@ -60,10 +60,17 @@ function aplicarDistorsion(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
+
+var vorticeAngle = 0; // Declaracion e inicializacion vorticeAngle
+var vorticeStrength = 0; // Declaracion e inicializacion de vorticeStrength
+var vorticeAnimationId = null;
+function AplicarEfectoVortice(evt) {
+
 var vorticeAngle = 0; // Declaración e inicialización de vorticeAngle
 var vorticeStrength = 0; // Declaración e inicialización de vorticeStrength
 var vorticeAnimationId = null;
 function handleVorticeEffect(evt) {
+
     if (vorticeAnimationId !== null) {
         cancelAnimationFrame(vorticeAnimationId);
         vorticeAnimationId = null;
@@ -71,6 +78,25 @@ function handleVorticeEffect(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     var centerX = imagenSal.getWidth() / 2;
     var centerY = imagenSal.getHeight() / 2;
+
+    vorticeAngle += 0.02;
+    vorticeStrength += 0.1;
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
+    // llama otra vez a la funcion para hacer un ciclo de animaciones
+    vorticeAnimationId = requestAnimationFrame(function () { return AplicarEfectoVortice(evt); });
+}
+var wavesAmplitude = 10;
+var wavesFrequency = 0.1;
+var wavesSpeed = 0.1;
+var wavesOffset = 0;
+function AplicarEfectoOndas(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    wavesOffset += wavesSpeed;
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarOndas(imagenSal, wavesAmplitude, wavesFrequency, wavesOffset));
+    // llama otra vez a la funcion para hacer un ciclo de animaciones
+    requestAnimationFrame(function () { return AplicarEfectoOndas(evt); });
+}
+
     vorticeAngle += 0.02; // Ajusta la velocidad de rotación según sea necesario
     vorticeStrength += 0.1; // Ajusta la fuerza del vórtice según sea necesario
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
@@ -87,6 +113,7 @@ function changeEffect(evt) {
     // Resto del código para cambiar el efecto...
 }
 // ...
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -100,5 +127,9 @@ document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlit
 document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
 document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
 //Efectos Intermedios
+
+document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
+document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
+
 document.getElementById("op-vortice").addEventListener('click', handleVorticeEffect, false);
 (_a = document.getElementById("stopButton")) === null || _a === void 0 ? void 0 : _a.addEventListener('click', changeEffect, false);
