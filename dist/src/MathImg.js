@@ -1,6 +1,7 @@
 var MathImg = /** @class */ (function () {
     function MathImg() {
     }
+    //AQUI VAN LOS EFECTOS
     MathImg.initArray = function (width, height) {
         var arrImage = new Array(3);
         arrImage[0] = new Array(height);
@@ -104,7 +105,6 @@ var MathImg = /** @class */ (function () {
         var r = arrImage[0][x][y];
         var g = arrImage[1][x][y];
         var b = arrImage[2][x][y];
-        // Fórmulas para el efecto sepia
         pixel[0] = Math.min(255, 0.393 * r + 0.769 * g + 0.150 * b);
         pixel[1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
         pixel[2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
@@ -127,11 +127,11 @@ var MathImg = /** @class */ (function () {
                             var pixelX = i + x;
                             var pixelY = j + y;
                             var glitchColor = [
-                                Math.random() * 255, // Red channel
-                                Math.random() * 255, // Green channel
-                                Math.random() * 255 // Blue channel
+                                Math.random() * 255, // red
+                                Math.random() * 255, // green 
+                                Math.random() * 255 // Blue 
                             ];
-                            var alpha = Math.random() * 0.5 + 0.5; // Translucency
+                            var alpha = Math.random() * 0.5 + 0.5;
                             sal[0][pixelX][pixelY] = (1 - alpha) * arrImage[0][pixelX][pixelY] + alpha * glitchColor[0];
                             sal[1][pixelX][pixelY] = (1 - alpha) * arrImage[1][pixelX][pixelY] + alpha * glitchColor[1];
                             sal[2][pixelX][pixelY] = (1 - alpha) * arrImage[2][pixelX][pixelY] + alpha * glitchColor[2];
@@ -194,6 +194,30 @@ var MathImg = /** @class */ (function () {
                     sal[0][i][j] = arrImage[0][newY][newX];
                     sal[1][i][j] = arrImage[1][newY][newX];
                     sal[2][i][j] = arrImage[2][newY][newX];
+                }
+            }
+        }
+        return sal;
+    };
+    MathImg.aplicarVortice = function (img, centerX, centerY, strength, angle) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        var cosA = Math.cos(angle);
+        var sinA = Math.sin(angle);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - centerX;
+                var deltaY = i - centerY;
+                var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                var angleOffset = strength * Math.exp(-distance / 1000) * Math.PI / 180;
+                var newX = cosA * deltaX - sinA * deltaY + centerX;
+                var newY = sinA * deltaX + cosA * deltaY + centerY;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
                 }
             }
         }

@@ -120,6 +120,9 @@ background-color: black;
   border: 1px solid #000000;
   margin-left: 5px; /* Ajusta la sangría hacia la derecha según sea necesario */
 }
+.file-button:hover {
+  background-color: #45a049; /* Cambia el color de fondo al pasar el ratón sobre el botón */
+}
 
 /* Estilo para el contenedor */
 .file-input-wrapper {
