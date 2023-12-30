@@ -27,9 +27,39 @@ var imgLocal = new ImageLocal(pantalla1);
 imgLocal.getImage().onload = imgLocal.onload;
 var imgLocal4 = new ImageLocal(pantalla4);
 imgLocal4.getImage().onload = imgLocal4.onload;
-function convertirAGris(evt) {
+function aplicarDesenfoque(evt) {
+    // Puedes ajustar el radio del desenfoque según tus necesidades
+    var radioDesenfoque = 1;
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.toGray(imagenSal));
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
+}
+function pixelearImagen(evt) {
+    var blockSize = 10; // Tamaño del bloque, ajusta según sea necesario
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.pixelear(imagenSal, blockSize));
+}
+function aplicarEfectoSepia(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSepia(imagenSal));
+}
+function aplicarEfectoGlitch(evt) {
+    var blockSize = 20; // Puedes ajustar el tamaño del bloque según sea necesario
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
+}
+function aplicarDestelloDeFoco(evt) {
+    var valorIngresado = prompt('Ingrese el valor numérico para el destello de foco (entre 10 y 100):');
+    if (valorIngresado !== null) {
+        var size = Math.min(100, Math.max(10, parseInt(valorIngresado, 10))) || 50;
+        var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+        imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDestelloDeFoco(imagenSal, size));
+    }
+}
+function aplicarDistorsion(evt) {
+    // Puedes ajustar el factor de distorsión según tus necesidades
+    var factorDistorsion = 0.5;
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
 //
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
@@ -38,4 +68,9 @@ document.getElementById('files2').addEventListener('change', imgLocal4.handleFil
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', imgLocal.handleFileSelect, false);
 //Filtros basicos
-document.getElementById("op-gris").addEventListener('click', convertirAGris, false);
+document.getElementById("op-desenfoque").addEventListener('click', aplicarDesenfoque, false);
+document.getElementById("op-pixelate").addEventListener('click', pixelearImagen, false);
+document.getElementById("op-sepia").addEventListener('click', aplicarEfectoSepia, false);
+document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlitch, false);
+document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
+document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
