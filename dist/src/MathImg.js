@@ -13,7 +13,6 @@ var MathImg = /** @class */ (function () {
         }
         return arrImage;
     };
-    //Aqui van mas
     MathImg.aplicarDesenfoque = function (img, radio) {
         var arrImage = img.getArrayImg();
         var sal = this.initArray(img.getWidth(), img.getHeight());

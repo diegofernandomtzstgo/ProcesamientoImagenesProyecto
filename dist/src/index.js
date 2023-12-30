@@ -74,4 +74,3 @@ document.getElementById("op-sepia").addEventListener('click', aplicarEfectoSepia
 document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlitch, false);
 document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
 document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
-// Agrega un evento para la opción de burbujas
