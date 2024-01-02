@@ -288,6 +288,74 @@ var MathImg = /** @class */ (function () {
         var noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
         return amplitude * noise;
     };
+    MathImg.crearSistemaSolar = function (img, tiempo) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                sal[0][i][j] = arrImage[0][i][j];
+                sal[1][i][j] = arrImage[1][i][j];
+                sal[2][i][j] = arrImage[2][i][j];
+            }
+        }
+        // Crear el sol en el centro
+        var solX = Math.floor(width / 2);
+        var solY = Math.floor(height / 2);
+        var solColor = "#FFFF00"; // Color amarillo para el sol
+        this.dibujarCirculo(sal, solX, solY, 20, solColor, width, height); // Tamaño para el sol
+        // Creando los palnetas
+        var numPlanetas = 5;
+        for (var i = 0; i < numPlanetas; i++) {
+            var radioOrbita = 50 + i * 20; // Destancia del planeta del sol
+            var velocidadGiro = 0.001 / (i + 1); //Velocidad 
+            var angulo = (tiempo * velocidadGiro) % (2 * Math.PI);
+            var planetaX = solX + Math.floor(radioOrbita * Math.cos(angulo));
+            var planetaY = solY + Math.floor(radioOrbita * Math.sin(angulo));
+            var planetaColor = "";
+            // se le da colores a cada planeta
+            if (i === 0) {
+                planetaColor = "#B0AFA7";
+            }
+            else if (i === 1) {
+                planetaColor = "#E09B00";
+            }
+            else if (i === 2) {
+                planetaColor = "#0077C8";
+            }
+            else if (i === 3) {
+                planetaColor = "#FF5733";
+            }
+            else if (i === 4) {
+                planetaColor = "#D16B54";
+            }
+            this.dibujarCirculo(sal, planetaX, planetaY, 10, planetaColor, width, height); //tamaño del planeta
+        }
+        return sal;
+    };
+    MathImg.dibujarCirculo = function (sal, x, y, radio, color, width, height) {
+        var _loop_1 = function (i) {
+            var _loop_2 = function (j) {
+                var distanciaAlCentro = Math.sqrt(Math.pow((i - y), 2) + Math.pow((j - x), 2));
+                var smoothness = 1;
+                var alpha = Math.max(0, Math.min(1, (radio - distanciaAlCentro) / smoothness));
+                if (distanciaAlCentro < radio) {
+                    var existingColor = sal.map(function (channel) { return channel[i][j] / 255; });
+                    var newColor = [parseInt(color.substring(1, 3), 16) / 255, parseInt(color.substring(3, 5), 16) / 255, parseInt(color.substring(5, 7), 16) / 255];
+                    for (var k = 0; k < 3; k++) {
+                        sal[k][i][j] = Math.round((1 - alpha) * existingColor[k] + alpha * newColor[k]) * 255;
+                    }
+                }
+            };
+            for (var j = 0; j < width; j++) {
+                _loop_2(j);
+            }
+        };
+        for (var i = 0; i < height; i++) {
+            _loop_1(i);
+        }
+    };
     return MathImg;
 }());
 export { MathImg };

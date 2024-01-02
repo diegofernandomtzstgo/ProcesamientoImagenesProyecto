@@ -141,8 +141,8 @@ function AplicarEfectoZoom(evt: any): void {
 }
 
 function aplicarPerturbacion(evt: any): void {
-  const amplitude = 10; // Ajusta según sea necesario
-  const frequency = 0.1; // Ajusta según sea necesario
+  const amplitude = 10; 
+  const frequency = 0.1; 
 
   let startTime: number;
 
@@ -163,6 +163,19 @@ function aplicarPerturbacion(evt: any): void {
   // Inicia la animación
   requestAnimationFrame(animate);
 }
+
+let tiempoInicioAnimacion: number = 0;
+function aplicarSistemaSolar(evt: any): void {
+  // Se obtiene el tiempo actual y además calcula el tiem´po transcurrido
+  const tiempoActual = Date.now();
+  const tiempoTranscurrido = tiempoActual - tiempoInicioAnimacion;
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.crearSistemaSolar(imagenSal, tiempoTranscurrido));
+  requestAnimationFrame((time) => {
+    aplicarSistemaSolar(evt);
+  });
+}
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -177,8 +190,13 @@ document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlit
 document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
 document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
 //Efectos Intermedios
-
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
 document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
 document.getElementById("op-perturbacion").addEventListener('click', aplicarPerturbacion, false);
+//document.getElementById("op-sistema-solar").addEventListener("click", aplicarSistemaSolar, false);
+document.getElementById("op-sistema-solar").addEventListener("click", function(evt) {
+  //Se inicia la animacin cuando se selecciona sistema solar
+  tiempoInicioAnimacion = Date.now();
+  aplicarSistemaSolar(evt);
+}, false);

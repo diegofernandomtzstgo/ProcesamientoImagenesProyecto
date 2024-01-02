@@ -101,8 +101,8 @@ function AplicarEfectoZoom(evt) {
     requestAnimationFrame(function () { return AplicarEfectoZoom(evt); });
 }
 function aplicarPerturbacion(evt) {
-    var amplitude = 10; // Ajusta según sea necesario
-    var frequency = 0.1; // Ajusta según sea necesario
+    var amplitude = 10;
+    var frequency = 0.1;
     var startTime;
     function animate(currentTime) {
         if (!startTime) {
@@ -116,6 +116,17 @@ function aplicarPerturbacion(evt) {
     }
     // Inicia la animación
     requestAnimationFrame(animate);
+}
+var tiempoInicioAnimacion = 0;
+function aplicarSistemaSolar(evt) {
+    // Se obtiene el tiempo actual y además calcula el tiem´po transcurrido
+    var tiempoActual = Date.now();
+    var tiempoTranscurrido = tiempoActual - tiempoInicioAnimacion;
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.crearSistemaSolar(imagenSal, tiempoTranscurrido));
+    requestAnimationFrame(function (time) {
+        aplicarSistemaSolar(evt);
+    });
 }
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
@@ -134,3 +145,9 @@ document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVor
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
 document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
 document.getElementById("op-perturbacion").addEventListener('click', aplicarPerturbacion, false);
+//document.getElementById("op-sistema-solar").addEventListener("click", aplicarSistemaSolar, false);
+document.getElementById("op-sistema-solar").addEventListener("click", function (evt) {
+    //Se inicia la animacin cuando se selecciona sistema solar
+    tiempoInicioAnimacion = Date.now();
+    aplicarSistemaSolar(evt);
+}, false);
