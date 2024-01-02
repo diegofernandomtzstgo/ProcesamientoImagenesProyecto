@@ -349,5 +349,71 @@ private static calcularOffset(amplitude: number, frequency: number, x: number, y
   const noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
   return amplitude * noise;
 }
+public static crearSistemaSolar(img: ImageType, tiempo: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+  
+  for (let i= 0; i<height; i++) {
+    for (let j= 0;j< width; j++) {
+      sal[0][i][j] =arrImage[0][i][j];
+      sal[1][i][j] =arrImage[1][i][j];
+      sal[2][i][j] =arrImage[2][i][j];
+    }
+  }
+  // Crear el sol en el centro
+  const solX = Math.floor(width / 2);
+  const solY = Math.floor(height / 2);
+  const solColor = "#FFFF00"; // Color amarillo para el sol
+  this.dibujarCirculo(sal, solX, solY, 20, solColor, width, height); // Tamaño para el sol
+
+  // Creando los palnetas
+  const numPlanetas = 5;
+  for (let i = 0; i < numPlanetas; i++) {
+    const radioOrbita = 50 + i * 20; // Destancia del planeta del sol
+    const velocidadGiro = 0.001 / (i + 1); //Velocidad 
+  
+    const angulo = (tiempo * velocidadGiro) % (2 * Math.PI);
+  
+    const planetaX = solX + Math.floor(radioOrbita * Math.cos(angulo));
+    const planetaY = solY + Math.floor(radioOrbita * Math.sin(angulo));
+  
+    let planetaColor = "";
+  
+    // se le da colores a cada planeta
+    if (i=== 0) {
+      planetaColor="#B0AFA7";
+    } else if (i===1) {
+      planetaColor="#E09B00";
+    } else if (i===2) {
+      planetaColor="#0077C8";
+    } else if (i===3) {
+      planetaColor="#FF5733";
+    } else if (i===4) {
+      planetaColor="#D16B54";
+    } 
+    this.dibujarCirculo(sal, planetaX, planetaY, 10, planetaColor, width, height); //tamaño del planeta
+  }
+
+  return sal;
+}
+private static dibujarCirculo(sal: number[][][], x: number, y: number, radio: number, color: string, width: number, height: number): void {
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const distanciaAlCentro=Math.sqrt((i - y)** 2 + (j - x)** 2);
+      const smoothness = 1;
+      const alpha = Math.max(0, Math.min(1, (radio - distanciaAlCentro) / smoothness));
+
+      if (distanciaAlCentro<radio) {
+        const existingColor=sal.map(channel => channel[i][j]/255);
+        const newColor =[parseInt(color.substring(1, 3), 16)/255, parseInt(color.substring(3, 5), 16) / 255, parseInt(color.substring(5, 7), 16) / 255];
+        for (let k=0; k<3; k++) {
+          sal[k][i][j] = Math.round((1 - alpha) * existingColor[k] + alpha * newColor[k]) * 255;
+        }
+      }
+    }
+  }
+}
 
 }
