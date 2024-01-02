@@ -320,4 +320,34 @@ public static aplicarZoomDinamico(img: ImageType, scale: number): number[][][] {
   return sal;
 }
 
+public static aplicarPerturbacion(img: ImageType, amplitude: number, frequency: number, time: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const offsetX = this.calcularOffset(amplitude, frequency, j, i, time);
+      const offsetY = this.calcularOffset(amplitude, frequency, i, j, time); // Intercambiamos i y j para una perturbación diferente
+
+      const newX = j + offsetX;
+      const newY = i + offsetY;
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+        sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+        sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+      }
+    }
+  }
+
+  return sal;
+}
+
+private static calcularOffset(amplitude: number, frequency: number, x: number, y: number, time: number): number {
+  const noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
+  return amplitude * noise;
+}
+
 }

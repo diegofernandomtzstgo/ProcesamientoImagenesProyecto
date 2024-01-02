@@ -264,6 +264,30 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    MathImg.aplicarPerturbacion = function (img, amplitude, frequency, time) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var offsetX = this.calcularOffset(amplitude, frequency, j, i, time);
+                var offsetY = this.calcularOffset(amplitude, frequency, i, j, time); // Intercambiamos i y j para una perturbación diferente
+                var newX = j + offsetX;
+                var newY = i + offsetY;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+                }
+            }
+        }
+        return sal;
+    };
+    MathImg.calcularOffset = function (amplitude, frequency, x, y, time) {
+        var noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
+        return amplitude * noise;
+    };
     return MathImg;
 }());
 export { MathImg };

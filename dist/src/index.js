@@ -100,6 +100,23 @@ function AplicarEfectoZoom(evt) {
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarZoomDinamico(imagenSal, zoomScale));
     requestAnimationFrame(function () { return AplicarEfectoZoom(evt); });
 }
+function aplicarPerturbacion(evt) {
+    var amplitude = 10; // Ajusta según sea necesario
+    var frequency = 0.1; // Ajusta según sea necesario
+    var startTime;
+    function animate(currentTime) {
+        if (!startTime) {
+            startTime = currentTime;
+        }
+        var elapsed = (currentTime - startTime) / 1000; // Tiempo transcurrido en segundos
+        var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+        imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarPerturbacion(imagenSal, amplitude, frequency, elapsed));
+        // Sigue animando
+        requestAnimationFrame(animate);
+    }
+    // Inicia la animación
+    requestAnimationFrame(animate);
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -116,4 +133,4 @@ document.getElementById("op-distorsion").addEventListener('click', aplicarDistor
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
 document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
-document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
+document.getElementById("op-perturbacion").addEventListener('click', aplicarPerturbacion, false);
