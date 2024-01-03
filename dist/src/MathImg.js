@@ -1,3 +1,20 @@
+var Heart = /** @class */ (function () {
+    function Heart(x, y, size, speedX, speedY) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.opacity = 1;
+    }
+    Heart.prototype.update = function () {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.opacity -= 0.005;
+    };
+    return Heart;
+}());
+export { Heart };
 var MathImg = /** @class */ (function () {
     function MathImg() {
     }
@@ -394,6 +411,62 @@ var MathImg = /** @class */ (function () {
             }
         }
         return sal;
+    };
+    MathImg.AplicarEfectoCorazones = function (img, hearts) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                sal[0][i][j] = arrImage[0][i][j];
+                sal[1][i][j] = arrImage[1][i][j];
+                sal[2][i][j] = arrImage[2][i][j];
+            }
+        }
+        for (var _i = 0, hearts_1 = hearts; _i < hearts_1.length; _i++) {
+            var heart = hearts_1[_i];
+            if (heart.opacity > 0) {
+                var heartX = Math.floor(heart.x);
+                var heartY = Math.floor(heart.y);
+                var heartSize = Math.floor(heart.size);
+                if (heartX >= 0 && heartX < width &&
+                    heartY >= 0 && heartY < height) {
+                    var color = [0xc8, 0xa2, 0xc8];
+                    // Dibuja la forma del corazón
+                    this.drawHeart(sal, heartX, heartY, heartSize, color);
+                }
+                heart.update();
+            }
+        }
+        return sal;
+    };
+    MathImg.drawHeart = function (sal, x, y, size, color) {
+        var heartShape = [
+            "  ***   ***  ",
+            " *********** ",
+            " ***********",
+            " *********** ",
+            "  *********  ",
+            "   *******   ",
+            "    *****    ",
+            "     ***     ",
+            "      *      "
+        ];
+        for (var i = 0; i < heartShape.length; i++) {
+            for (var j = 0; j < heartShape[i].length; j++) {
+                if (heartShape[i][j] === '*') {
+                    var pixelX = x - Math.floor(heartShape[i].length / 2) + j;
+                    var pixelY = y - Math.floor(heartShape.length / 2) + i;
+                    if (pixelX >= 0 && pixelX < sal[0][0].length &&
+                        pixelY >= 0 && pixelY < sal[0].length) {
+                        sal[0][pixelY][pixelX] = color[0];
+                        sal[1][pixelY][pixelX] = color[1];
+                        sal[2][pixelY][pixelX] = color[2];
+                    }
+                }
+            }
+        }
     };
     return MathImg;
 }());
