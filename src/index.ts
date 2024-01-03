@@ -197,6 +197,33 @@ function AplicarEfectoRemolinos(evt: any): void {
   }
   requestAnimationFrame(animate);
 }
+let stretchAnimationId: number | null = null;
+
+function AplicarEfectoEstiramiento(evt: any): void {
+  if (stretchAnimationId !== null) {
+    cancelAnimationFrame(stretchAnimationId);
+    stretchAnimationId = null;
+  }
+
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  const centerX = imagenSal.getWidth() / 2;
+  const centerY = imagenSal.getHeight() / 2;
+
+  let stretchTime= 0;
+
+  const stretchEffect= () => {
+    stretchTime += 0.01;  // velocidad del estiramientoo
+
+    const scaleX = Math.sin(stretchTime);
+    const scaleY = Math.cos(stretchTime);
+
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarTransformacion(imagenSal, centerX, centerY, scaleX, scaleY));
+
+    stretchAnimationId = requestAnimationFrame(stretchEffect);
+  };
+  stretchEffect();
+}
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -222,3 +249,4 @@ document.getElementById("op-sistema-solar").addEventListener("click", function(e
   aplicarSistemaSolar(evt);
 }, false);
 document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
+document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);

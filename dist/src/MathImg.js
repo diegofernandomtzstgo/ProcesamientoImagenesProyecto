@@ -375,6 +375,26 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    MathImg.aplicarTransformacion = function (img, centerX, centerY, scaleX, scaleY) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - centerX;
+                var deltaY = i - centerY;
+                var newX = centerX + deltaX * scaleX;
+                var newY = centerY + deltaY * scaleY;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+                }
+            }
+        }
+        return sal;
+    };
     return MathImg;
 }());
 export { MathImg };
