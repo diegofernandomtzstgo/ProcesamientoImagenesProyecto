@@ -356,6 +356,25 @@ var MathImg = /** @class */ (function () {
             _loop_1(i);
         }
     };
+    MathImg.AplicarRemolinos = function (img, strength, frequency, elapsed) {
+        var arrImage = img.getArrayImg();
+        var sal = this.initArray(img.getWidth(), img.getHeight());
+        var width = img.getWidth();
+        var height = img.getHeight();
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var displacement = Math.sin(frequency * elapsed + i * j) * strength;
+                var newX = Math.floor(j + displacement);
+                var newY = Math.floor(i + displacement);
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][newY][newX];
+                    sal[1][i][j] = arrImage[1][newY][newX];
+                    sal[2][i][j] = arrImage[2][newY][newX];
+                }
+            }
+        }
+        return sal;
+    };
     return MathImg;
 }());
 export { MathImg };
