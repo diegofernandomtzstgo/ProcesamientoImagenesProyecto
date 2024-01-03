@@ -146,6 +146,25 @@ function AplicarEfectoRemolinos(evt) {
     }
     requestAnimationFrame(animate);
 }
+var stretchAnimationId = null;
+function AplicarEfectoEstiramiento(evt) {
+    if (stretchAnimationId !== null) {
+        cancelAnimationFrame(stretchAnimationId);
+        stretchAnimationId = null;
+    }
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    var centerX = imagenSal.getWidth() / 2;
+    var centerY = imagenSal.getHeight() / 2;
+    var stretchTime = 0;
+    var stretchEffect = function () {
+        stretchTime += 0.01; // velocidad del estiramientoo
+        var scaleX = Math.sin(stretchTime);
+        var scaleY = Math.cos(stretchTime);
+        imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarTransformacion(imagenSal, centerX, centerY, scaleX, scaleY));
+        stretchAnimationId = requestAnimationFrame(stretchEffect);
+    };
+    stretchEffect();
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -170,3 +189,4 @@ document.getElementById("op-sistema-solar").addEventListener("click", function (
     aplicarSistemaSolar(evt);
 }, false);
 document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
+document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
