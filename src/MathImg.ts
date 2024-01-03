@@ -416,4 +416,26 @@ private static dibujarCirculo(sal: number[][][], x: number, y: number, radio: nu
   }
 }
 
+public static AplicarRemolinos(img: ImageType, strength: number, frequency: number, elapsed: number): number[][][] {
+  const arrImage=img.getArrayImg();
+  const sal=this.initArray(img.getWidth(),img.getHeight());
+
+  const width=img.getWidth();
+  const height=img.getHeight();
+
+  for (let i=0; i<height; i++) {
+     for (let j=0; j<width; j++) {
+      const displacement = Math.sin(frequency * elapsed + i * j) * strength;
+      const newX= Math.floor(j + displacement);
+      const newY= Math.floor(i + displacement);
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j]=arrImage[0][newY][newX];
+         sal[1][i][j]=arrImage[1][newY][newX];
+        sal[2][i][j]=arrImage[2][newY][newX];
+      }
+    }
+  }
+   return sal;
+}
 }
