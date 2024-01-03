@@ -194,7 +194,6 @@ document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVor
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
 document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
 document.getElementById("op-perturbacion").addEventListener('click', aplicarPerturbacion, false);
-//document.getElementById("op-sistema-solar").addEventListener("click", aplicarSistemaSolar, false);
 document.getElementById("op-sistema-solar").addEventListener("click", function(evt) {
   //Se inicia la animacin cuando se selecciona sistema solar
   tiempoInicioAnimacion = Date.now();
