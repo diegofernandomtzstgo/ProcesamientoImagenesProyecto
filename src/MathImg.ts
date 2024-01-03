@@ -1,6 +1,28 @@
 
 import { ImageType } from "./ImageType.js";
+export class Heart {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  opacity: number;
 
+  constructor(x: number, y: number, size: number, speedX: number, speedY: number) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.speedX = speedX;
+    this.speedY = speedY;
+    this.opacity = 1;
+  }
+
+  update(): void {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.opacity -= 0.005;
+  }
+}
 export class MathImg {
 //AQUI VAN LOS EFECTOS
   public static initArray(width: number, height: number): any {
@@ -457,5 +479,68 @@ public static aplicarTransformacion(img: ImageType, centerX: number, centerY: nu
     }
   }
   return sal;
+}
+public static AplicarEfectoCorazones(img: ImageType, hearts: Heart[]): number[][][] {
+  const arrImage=img.getArrayImg();
+  const width=img.getWidth();
+  const height=img.getHeight();
+  const sal=this.initArray(width, height);
+
+  for (let i=0; i<height; i++) {
+    for (let j=0; j<width; j++) {
+      sal[0][i][j]=arrImage[0][i][j];
+      sal[1][i][j]=arrImage[1][i][j];
+      sal[2][i][j]=arrImage[2][i][j];
+    }
+  }
+
+  for (const heart of hearts) {
+    if (heart.opacity>0) {
+      const heartX=Math.floor(heart.x);
+      const heartY=Math.floor(heart.y);
+      const heartSize=Math.floor(heart.size);
+      if (
+        heartX>= 0 && heartX<width &&
+        heartY>=0 && heartY<height
+      ) {
+        const color=[0xc8, 0xa2, 0xc8];
+
+        // Dibuja la forma del corazón
+        this.drawHeart(sal, heartX, heartY, heartSize, color);
+      }
+      heart.update();
+    }
+  }
+  return sal;
+}
+private static drawHeart(sal: number[][][], x: number, y: number, size: number, color: number[]): void {
+  const heartShape = [
+    "  ***   ***  ",
+    " *********** ",
+    " ***********",
+    " *********** ",
+    "  *********  ",
+    "   *******   ",
+    "    *****    ",
+    "     ***     ",
+    "      *      "
+  ];
+
+  for (let i= 0; i <heartShape.length; i++) {
+    for (let j= 0; j <heartShape[i].length; j++) {
+      if (heartShape[i][j] === '*') {
+        const pixelX =x-Math.floor(heartShape[i].length/ 2)+ j;
+        const pixelY =y-Math.floor(heartShape.length/ 2)+ i;
+        if (
+          pixelX>= 0 && pixelX < sal[0][0].length &&
+          pixelY>= 0 && pixelY < sal[0].length
+        ) {
+          sal[0][pixelY][pixelX] = color[0];
+          sal[1][pixelY][pixelX] = color[1];
+          sal[2][pixelY][pixelX] = color[2];
+        }
+      }
+    }
+  }
 }
 }

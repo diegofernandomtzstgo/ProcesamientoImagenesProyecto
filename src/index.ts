@@ -223,6 +223,48 @@ function AplicarEfectoEstiramiento(evt: any): void {
   };
   stretchEffect();
 }
+// Agrega una variable para almacenar los corazones en movimiento
+let hearts: Heart[] = [];
+class Heart {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  opacity: number;
+
+  constructor(x: number, y: number, size: number, speedX: number, speedY: number) {
+    this.x=x;
+    this.y=y;
+    this.size=size;
+    this.speedX=speedX;
+    this.speedY=speedY;
+    this.opacity=1;
+  }
+  update(): void {
+    this.x+=this.speedX;
+    this.y+=this.speedY;
+    this.opacity -= 0.005;
+  }
+}
+// aplicar efecto corazones
+function AplicarEfectoCorazones(evt: any): void {
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  // aqui se genera un nuevo corazon
+  const heartSize=Math.random()*25;
+  const heartSpeedX=(Math.random()- 0.5)*2;
+  const heartSpeedY=Math.random()*3;
+  const newHeart=new Heart(evt.offsetX, evt.offsetY, heartSize, heartSpeedX, heartSpeedY);
+  hearts.push(newHeart);
+
+  const messageElement=document.getElementById("mensaje-efecto");
+  // mostrando mensaje
+  if (messageElement) {
+    messageElement.innerText="Pase el cursor en la imagen";
+  }
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarEfectoCorazones(imagenSal, hearts)) ;
+  
+}
 
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
@@ -250,3 +292,13 @@ document.getElementById("op-sistema-solar").addEventListener("click", function(e
 }, false);
 document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
+document.getElementById("op-corazones").addEventListener('click', () => {
+  // Agrega un mensaje indicando que el efecto está activado
+  const messageElement = document.getElementById("vortex-message");
+  if (messageElement) {
+    messageElement.innerText = "Efecto de vórtice activado. Pase el cursor en la imagen.";
+  }
+  hearts = []; // Reinicia la lista de corazones
+  AplicarEfectoCorazones(event); 
+  lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false);
+});
