@@ -78,8 +78,9 @@ function aplicarDistorsion(evt: any): void {
 }
 
 
-let vorticeAngle = 0; // Declaración e inicialización de vorticeAngle
-let vorticeStrength = 0; // Declaración e inicialización de vorticeStrength
+let vorticeAngle = 0;
+let vorticeStrength = 0;
+let vorticeTime = 0;
 let vorticeAnimationId: number | null = null;
 
 function AplicarEfectoVortice(evt: any): void {
@@ -92,12 +93,12 @@ function AplicarEfectoVortice(evt: any): void {
   const centerX = imagenSal.getWidth() / 2;
   const centerY = imagenSal.getHeight() / 2;
 
-  vorticeAngle += 0.02; 
-  vorticeStrength += 0.1; 
+  vorticeTime += 0.05;  // Ajusta la velocidad del vórtice en el tiempo
+  vorticeAngle = Math.sin(vorticeTime) * 2 * Math.PI;  // Utiliza la función seno para crear un movimiento cíclico
+  vorticeStrength += 0.1;
 
   imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarVortice(imagenSal, centerX, centerY, vorticeStrength, vorticeAngle));
 
-  // bucle animacion
   vorticeAnimationId = requestAnimationFrame(() => AplicarEfectoVortice(evt));
 }
 
