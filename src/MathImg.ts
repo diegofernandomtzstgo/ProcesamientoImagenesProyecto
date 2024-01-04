@@ -25,6 +25,7 @@ export class Heart {
 }
 export class MathImg {
 //AQUI VAN LOS EFECTOS
+
   public static initArray(width: number, height: number): any {
     var arrImage = new Array(3);
     arrImage[0] = new Array(height);
@@ -542,5 +543,87 @@ private static drawHeart(sal: number[][][], x: number, y: number, size: number, 
       }
     }
   }
+}
+//Aplica Ondas que se van a ocupar al efecto burbuja
+public static aplicarDistorsionConOndasMovimiento(img: ImageType, factor: number, centerX: number, centerY: number): number[][][] {
+  const arrImage=img.getArrayImg();
+  const width=img.getWidth();
+  const height=img.getHeight();
+  const sal=this.initArray(width, height);
+
+  for (let i=0; i<height; i++) {
+    for (let j=0; j<width; j++) {
+      const deltaX=j-centerX;
+      const deltaY=i-centerY;
+
+      const distance=Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      const angle=Math.atan2(deltaY, deltaX);
+
+      // Agregar movimiento aleatorio a las ondas
+      const randomMovement=Math.random()*factor;
+      const waveDistortion=Math.sin(distance*factor+randomMovement);
+
+      const newX= j +waveDistortion * Math.cos(angle);
+      const newY= i +waveDistortion * Math.sin(angle);
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j]=arrImage[0][Math.floor(newY)][Math.floor(newX)];
+        sal[1][i][j]=arrImage[1][Math.floor(newY)][Math.floor(newX)];
+        sal[2][i][j]=arrImage[2][Math.floor(newY)][Math.floor(newX)];
+      }
+    }
+  }
+
+  return sal;
+}
+/// Efecto Burbuja
+public static aplicarEfectoBurbuja(img: ImageType, evt: any, factorDistorsion: number, explosionRadius: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  const { offsetX, offsetY } = evt;
+  const dispersionFactor = 0.05; // factor de dispersion
+  //Se ocupa distorcion para fondo
+  const imgDistorsionada = this.aplicarDistorsionConOndasMovimiento(img, factorDistorsion, offsetX, offsetY);
+  
+  //const imgDistorsionada = this.aplicarDistorsion(img, factorDistorsion);
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const deltaX = j - offsetX;
+      const deltaY = i - offsetY;
+
+      // Aplicar distorsión como fondo antes de la explosión
+      const distorsionX = Math.floor(j + Math.sin(i * factorDistorsion) * factorDistorsion * 10);
+      const distorsionY = Math.floor(i + Math.sin(j * factorDistorsion) * factorDistorsion * 10);
+
+      if (distorsionX >= 0 && distorsionX < width && distorsionY >= 0 && distorsionY < height) {
+        sal[0][i][j] = imgDistorsionada[0][distorsionY][distorsionX];
+        sal[1][i][j] = imgDistorsionada[1][distorsionY][distorsionX];
+        sal[2][i][j] = imgDistorsionada[2][distorsionY][distorsionX];
+      }
+
+      const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+      if (distance < explosionRadius) {
+        const dispersionX = deltaX * dispersionFactor * (explosionRadius - distance);
+        const dispersionY = deltaY * dispersionFactor * (explosionRadius - distance);
+      const newX = j + dispersionX;
+        const newY = i + dispersionY;
+
+        if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+          const weight = (explosionRadius - distance) / explosionRadius;
+           sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[0][i][j] - arrImage[0][i][j]) * weight, 0, 255);
+        sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[1][i][j] - arrImage[1][i][j]) * weight, 0, 255);
+          sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[2][i][j] - arrImage[2][i][j]) * weight, 0, 255);
+        }
+      }
+    }
+  }
+  return sal;
+}
+public static clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 }
