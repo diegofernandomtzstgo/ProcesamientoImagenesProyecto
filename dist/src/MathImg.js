@@ -468,6 +468,74 @@ var MathImg = /** @class */ (function () {
             }
         }
     };
+    MathImg.aplicarDistorsionConOndasMovimiento = function (img, factor, centerX, centerY) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - centerX;
+                var deltaY = i - centerY;
+                var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                var angle = Math.atan2(deltaY, deltaX);
+                // Agregar movimiento aleatorio a las ondas
+                var randomMovement = Math.random() * factor;
+                var waveDistortion = Math.sin(distance * factor + randomMovement);
+                var newX = j + waveDistortion * Math.cos(angle);
+                var newY = i + waveDistortion * Math.sin(angle);
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = arrImage[0][Math.floor(newY)][Math.floor(newX)];
+                    sal[1][i][j] = arrImage[1][Math.floor(newY)][Math.floor(newX)];
+                    sal[2][i][j] = arrImage[2][Math.floor(newY)][Math.floor(newX)];
+                }
+            }
+        }
+        return sal;
+    };
+    /// Efecto Burbuja
+    MathImg.aplicarEfectoBurbuja = function (img, evt, factorDistorsion, explosionRadius) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        var offsetX = evt.offsetX, offsetY = evt.offsetY;
+        var dispersionFactor = 0.05; // factor de dispersion
+        //Se ocupa distorcion para fondo
+        var imgDistorsionada = this.aplicarDistorsionConOndasMovimiento(img, factorDistorsion, offsetX, offsetY);
+        //const imgDistorsionada = this.aplicarDistorsion(img, factorDistorsion);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - offsetX;
+                var deltaY = i - offsetY;
+                // Aplicar distorsión como fondo antes de la explosión
+                var distorsionX = Math.floor(j + Math.sin(i * factorDistorsion) * factorDistorsion * 10);
+                var distorsionY = Math.floor(i + Math.sin(j * factorDistorsion) * factorDistorsion * 10);
+                if (distorsionX >= 0 && distorsionX < width && distorsionY >= 0 && distorsionY < height) {
+                    sal[0][i][j] = imgDistorsionada[0][distorsionY][distorsionX];
+                    sal[1][i][j] = imgDistorsionada[1][distorsionY][distorsionX];
+                    sal[2][i][j] = imgDistorsionada[2][distorsionY][distorsionX];
+                }
+                var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                if (distance < explosionRadius) {
+                    var dispersionX = deltaX * dispersionFactor * (explosionRadius - distance);
+                    var dispersionY = deltaY * dispersionFactor * (explosionRadius - distance);
+                    var newX = j + dispersionX;
+                    var newY = i + dispersionY;
+                    if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                        var weight = (explosionRadius - distance) / explosionRadius;
+                        sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[0][i][j] - arrImage[0][i][j]) * weight, 0, 255);
+                        sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[1][i][j] - arrImage[1][i][j]) * weight, 0, 255);
+                        sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)] + (imgDistorsionada[2][i][j] - arrImage[2][i][j]) * weight, 0, 255);
+                    }
+                }
+            }
+        }
+        return sal;
+    };
+    MathImg.clamp = function (value, min, max) {
+        return Math.min(Math.max(value, min), max);
+    };
     return MathImg;
 }());
 export { MathImg };

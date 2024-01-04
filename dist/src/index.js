@@ -199,6 +199,14 @@ function AplicarEfectoCorazones(evt) {
     }
     imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarEfectoCorazones(imagenSal, hearts));
 }
+function AplicarEfectoBurbuja(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Pase el cursor en la imagen";
+    }
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -211,7 +219,7 @@ document.getElementById("op-sepia").addEventListener('click', aplicarEfectoSepia
 document.getElementById("op-glitch").addEventListener('click', aplicarEfectoGlitch, false);
 document.getElementById("op-foco").addEventListener('click', aplicarDestelloDeFoco, false);
 document.getElementById("op-distorsion").addEventListener('click', aplicarDistorsion, false);
-//Efectos Intermedios
+//Efectos Con Movimiento
 document.getElementById("op-vortice").addEventListener('click', AplicarEfectoVortice, false);
 document.getElementById("op-ondas").addEventListener("click", AplicarEfectoOndas, false);
 document.getElementById("op-zoom").addEventListener("click", AplicarEfectoZoom, false);
@@ -224,6 +232,7 @@ document.getElementById("op-sistema-solar").addEventListener("click", function (
 }, false);
 document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
+//Efectos con Puntero
 document.getElementById("op-corazones").addEventListener('click', function () {
     // Agrega un mensaje indicando que el efecto está activado
     var messageElement = document.getElementById("vortex-message");
@@ -233,4 +242,12 @@ document.getElementById("op-corazones").addEventListener('click', function () {
     hearts = []; // Reinicia la lista de corazones
     AplicarEfectoCorazones(event);
     lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false);
+});
+document.getElementById("op-burbuja").addEventListener('click', function () {
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Efecto de Burbuja activado. Pase el cursor en la imagen.";
+    }
+    AplicarEfectoBurbuja(event);
+    lienzo2.addEventListener('mousemove', function (evt) { return AplicarEfectoBurbuja(evt); }, false);
 });
