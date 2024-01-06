@@ -468,6 +468,7 @@ var MathImg = /** @class */ (function () {
             }
         }
     };
+    //Aplica Ondas que se van a ocupar al efecto burbuja
     MathImg.aplicarDistorsionConOndasMovimiento = function (img, factor, centerX, centerY) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -535,6 +536,38 @@ var MathImg = /** @class */ (function () {
     };
     MathImg.clamp = function (value, min, max) {
         return Math.min(Math.max(value, min), max);
+    };
+    MathImg.aplicarEfectoFuego = function (img, evt, factorMovimiento, factorDetalle) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        var offsetX = evt.offsetX, offsetY = evt.offsetY;
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - offsetX;
+                var deltaY = i - offsetY;
+                var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                var angle = Math.atan2(deltaY, deltaX);
+                var movimiento = Math.sin(distance * factorMovimiento);
+                var detalleFractal = Math.sin(distance * factorDetalle);
+                var newX = j + movimiento * Math.cos(angle) + detalleFractal * 10;
+                var newY = i + movimiento * Math.sin(angle) + detalleFractal * 10;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    // colores para una apariencia más definida
+                    var colorVariation = Math.random() * 30;
+                    var red = this.clamp(255 - distance * 2 + colorVariation, 0, 255);
+                    var green = this.clamp(100 - distance * 1.5 + colorVariation * 0.5, 0, 255);
+                    var blue = this.clamp(20 - distance + colorVariation * 0.2, 0, 255);
+                    var weight = 0.3; // Peso de la iimagen originak
+                    var intensity = Math.sin(distance * 0.1) * 0.5 + 3; // Intencidad de la variacion del calor de la bola de fuego
+                    sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)] * weight + red * (1 - weight) * intensity, 0, 255);
+                    sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)] * weight + green * (1 - weight) * intensity, 0, 255);
+                    sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)] * weight + blue * (1 - weight) * intensity, 0, 255);
+                }
+            }
+        }
+        return sal;
     };
     return MathImg;
 }());

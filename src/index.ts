@@ -275,6 +275,20 @@ function AplicarEfectoBurbuja(evt: any): void {
   }
   imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
 }
+
+function AplicarEfectoFuego(evt: any): void {
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  const messageElement = document.getElementById("mensaje-efecto");
+
+  if (messageElement) {
+  messageElement.innerText="Mueva el cursor para ver el fuego en accion.";
+  }
+  const factorMovimiento = 0.05;
+  const factorDetalle = 0.02; 
+
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
+}
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -320,4 +334,12 @@ document.getElementById("op-burbuja").addEventListener('click', () => {
   }
   AplicarEfectoBurbuja(event); 
   lienzo2.addEventListener('mousemove', (evt) => AplicarEfectoBurbuja(evt), false);
+});
+document.getElementById("op-fuego").addEventListener('click', () => {
+  const messageElement = document.getElementById("mensaje-efecto");
+  if (messageElement) {
+    messageElement.innerText = "Efecto de Fuego Fractal activado. Mueva el cursor para ver el fuego en acción.";
+  }
+  AplicarEfectoFuego(event);
+  lienzo2.addEventListener('mousemove', (evt) => AplicarEfectoFuego(evt), false);
 });

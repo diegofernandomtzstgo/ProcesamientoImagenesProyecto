@@ -626,4 +626,46 @@ public static aplicarEfectoBurbuja(img: ImageType, evt: any, factorDistorsion: n
 public static clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
+public static aplicarEfectoFuego(img: ImageType, evt: any, factorMovimiento: number, factorDetalle: number): number[][][] {
+  const arrImage= img.getArrayImg();
+  const width=img.getWidth();
+  const height=img.getHeight();
+  const sal=this.initArray(width, height);
+
+  const { offsetX, offsetY } = evt;
+
+  for (let i=0; i <height; i++) {
+    for (let j=0; j <width; j++) {
+      const deltaX=j-offsetX;
+      const deltaY=i -offsetY;
+
+      const distance=Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      const angle=Math.atan2(deltaY, deltaX);
+
+      
+      const movimiento=Math.sin(distance*factorMovimiento);
+      const detalleFractal=Math.sin(distance*factorDetalle);
+
+      const newX = j + movimiento * Math.cos(angle) + detalleFractal * 10;
+      const newY = i + movimiento * Math.sin(angle) + detalleFractal * 10;
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        // colores para una apariencia más definida
+        const colorVariation = Math.random() * 30;
+        const red = this.clamp(255 - distance * 2 + colorVariation, 0, 255);
+        const green = this.clamp(100 - distance * 1.5 + colorVariation * 0.5, 0, 255);
+        const blue = this.clamp(20 - distance + colorVariation * 0.2, 0, 255);
+
+        const weight=0.3; // Peso de la iimagen originak
+        const intensity=Math.sin(distance * 0.1) * 0.5 + 3; // Intencidad de la variacion del calor de la bola de fuego
+
+        sal[0][i][j]=this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)] * weight + red * (1 - weight) * intensity, 0, 255);
+        sal[1][i][j]=this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)] * weight + green * (1 - weight) * intensity, 0, 255);
+        sal[2][i][j]=this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)] * weight + blue * (1 - weight) * intensity, 0, 255);
+      }
+    }
+  }
+
+  return sal;
+}
 }
