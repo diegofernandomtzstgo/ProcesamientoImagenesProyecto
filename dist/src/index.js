@@ -217,6 +217,16 @@ function AplicarEfectoFuego(evt) {
     var factorDetalle = 0.02;
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
 }
+function aplicarEfectoSimulacionCuantico(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Mueva el cursor.";
+    }
+    var factorMovimiento = 0.02; // movimiento
+    var factorDetalle = 0.04; // detalle del efecto
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -268,4 +278,12 @@ document.getElementById("op-fuego").addEventListener('click', function () {
     }
     AplicarEfectoFuego(event);
     lienzo2.addEventListener('mousemove', function (evt) { return AplicarEfectoFuego(evt); }, false);
+});
+document.getElementById("op-cuantico").addEventListener('click', function () {
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Efecto Cuantico activado. Mueva el cursor para experimentar el efecto.";
+    }
+    aplicarEfectoSimulacionCuantico(event);
+    lienzo2.addEventListener('mousemove', function (evt) { return aplicarEfectoSimulacionCuantico(evt); }, false);
 });

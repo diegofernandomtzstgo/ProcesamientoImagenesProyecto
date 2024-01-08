@@ -668,4 +668,46 @@ public static aplicarEfectoFuego(img: ImageType, evt: any, factorMovimiento: num
 
   return sal;
 }
+public static aplicarEfectoSimulacionCuantico(img: ImageType, evt: any, factorMovimiento: number, factorDetalle: number): number[][][] {
+  const arrImage=img.getArrayImg();
+  const width=img.getWidth();
+  const height=img.getHeight();
+  const sal =this.initArray(width,height);
+
+  const { offsetX, offsetY } = evt;
+
+  for (let i=0; i < height; i++) {
+    for (let j=0; j< width; j++) {
+      const deltaX =j-offsetX;
+      const deltaY =i-offsetY;
+
+      const distance=Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      const angle=Math.atan2(deltaY, deltaX);
+
+      // Aplicar movimiento 
+      const movimiento=Math.sin(distance*factorMovimiento);
+      const detalleCuántico=Math.sin(distance*factorDetalle);
+
+      const newX=j+movimiento*Math.cos(angle) + detalleCuántico * 10;
+      const newY=i+movimiento*Math.sin(angle)+ detalleCuántico * 10;
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        // mezcla de colores 
+        const quantumRed=Math.sin(newX * 0.1) * 255;
+        const quantumGreen=Math.cos(newY * 0.05) * 255;
+        const quantumBlue=Math.sin((newX + newY) * 0.1) * 255;
+
+        const originalWeight = 0.5; //  peso de la imagen original
+        const red=this.clamp(quantumRed * (1 - originalWeight) + arrImage[0][i][j] * originalWeight, 0, 255);
+        const green=this.clamp(quantumGreen * (1 - originalWeight) + arrImage[1][i][j] * originalWeight, 0, 255);
+        const blue=this.clamp(quantumBlue * (1 - originalWeight) + arrImage[2][i][j] * originalWeight, 0, 255);
+
+        sal[0][i][j] = red;
+        sal[1][i][j] = green;
+        sal[2][i][j]= blue;
+      }
+    }
+  }
+  return sal;
+}
 }
