@@ -569,6 +569,40 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    MathImg.aplicarEfectoSimulacionCuantico = function (img, evt, factorMovimiento, factorDetalle) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        var offsetX = evt.offsetX, offsetY = evt.offsetY;
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - offsetX;
+                var deltaY = i - offsetY;
+                var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                var angle = Math.atan2(deltaY, deltaX);
+                // Aplicar movimiento 
+                var movimiento = Math.sin(distance * factorMovimiento);
+                var detalleCuántico = Math.sin(distance * factorDetalle);
+                var newX = j + movimiento * Math.cos(angle) + detalleCuántico * 10;
+                var newY = i + movimiento * Math.sin(angle) + detalleCuántico * 10;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    // mezcla de colores 
+                    var quantumRed = Math.sin(newX * 0.1) * 255;
+                    var quantumGreen = Math.cos(newY * 0.05) * 255;
+                    var quantumBlue = Math.sin((newX + newY) * 0.1) * 255;
+                    var originalWeight = 0.5; //  peso de la imagen original
+                    var red = this.clamp(quantumRed * (1 - originalWeight) + arrImage[0][i][j] * originalWeight, 0, 255);
+                    var green = this.clamp(quantumGreen * (1 - originalWeight) + arrImage[1][i][j] * originalWeight, 0, 255);
+                    var blue = this.clamp(quantumBlue * (1 - originalWeight) + arrImage[2][i][j] * originalWeight, 0, 255);
+                    sal[0][i][j] = red;
+                    sal[1][i][j] = green;
+                    sal[2][i][j] = blue;
+                }
+            }
+        }
+        return sal;
+    };
     return MathImg;
 }());
 export { MathImg };
