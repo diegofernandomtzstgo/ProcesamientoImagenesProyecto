@@ -373,7 +373,7 @@ var MathImg = /** @class */ (function () {
             _loop_1(i);
         }
     };
-    MathImg.AplicarRemolinos = function (img, strength, frequency, elapsed) {
+    MathImg.AplicarMosaicos = function (img, strength, frequency, elapsed) {
         var arrImage = img.getArrayImg();
         var sal = this.initArray(img.getWidth(), img.getHeight());
         var width = img.getWidth();

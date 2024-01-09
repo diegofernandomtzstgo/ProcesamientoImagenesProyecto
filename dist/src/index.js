@@ -3,10 +3,10 @@ import { ImageType } from "./ImageType.js";
 import { MathImg } from "./MathImg.js";
 var lienzo1;
 var lienzo2;
-var lienzo4;
+var lienzo3;
 var pantalla1;
 var pantalla2;
-var pantalla4;
+var pantalla3;
 /* Este evento controla la forma de abrir un archivo mediante el evento de arrastrar y soltar */
 function handleDragOver(evt) {
     evt.stopPropagation();
@@ -20,44 +20,44 @@ lienzo1 = document.getElementById('img1');
 pantalla1 = lienzo1.getContext("2d");
 lienzo2 = document.getElementById('img2');
 pantalla2 = lienzo2.getContext("2d");
-lienzo4 = document.getElementById('img4');
-pantalla4 = lienzo4.getContext("2d");
+lienzo3 = document.getElementById('img3');
+pantalla3 = lienzo3.getContext("2d");
 var dropZone = lienzo1; //document.getElementById('img1');
 var imgLocal = new ImageLocal(pantalla1);
 imgLocal.getImage().onload = imgLocal.onload;
-var imgLocal4 = new ImageLocal(pantalla4);
-imgLocal4.getImage().onload = imgLocal4.onload;
+//var imgLocal4: ImageLocal = new ImageLocal(pantalla3);
+//imgLocal4.getImage().onload = imgLocal4.onload;
 function aplicarDesenfoque(evt) {
     var radioDesenfoque = 1;
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
 }
 function pixelearImagen(evt) {
     var blockSize = 10; // Tamaño del bloqur
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.pixelear(imagenSal, blockSize));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.pixelear(imagenSal, blockSize));
 }
 function aplicarEfectoSepia(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSepia(imagenSal));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSepia(imagenSal));
 }
 function aplicarEfectoGlitch(evt) {
     var blockSize = 20;
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
 }
 function aplicarDestelloDeFoco(evt) {
     var valorIngresado = prompt('Ingrese el valor numérico para el destello de foco (entre 10 y 100):');
     if (valorIngresado !== null) {
         var size = Math.min(100, Math.max(10, parseInt(valorIngresado, 10))) || 50;
         var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-        imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDestelloDeFoco(imagenSal, size));
+        imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDestelloDeFoco(imagenSal, size));
     }
 }
 function aplicarDistorsion(evt) {
     var factorDistorsion = 0.5;
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
 var vorticeAngle = 0;
 var vorticeStrength = 0;
@@ -129,7 +129,7 @@ function aplicarSistemaSolar(evt) {
         aplicarSistemaSolar(evt);
     });
 }
-function AplicarEfectoRemolinos(evt) {
+function AplicarEfectoMosaicos(evt) {
     var strength = 10;
     var frequency = 0.01;
     var startTime;
@@ -141,7 +141,7 @@ function AplicarEfectoRemolinos(evt) {
         var deltaTime = (currentTime - startTime) / 1000;
         elapsed += deltaTime;
         var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-        imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarRemolinos(imagenSal, strength, frequency, elapsed));
+        imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarMosaicos(imagenSal, strength, frequency, elapsed));
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
@@ -197,7 +197,7 @@ function AplicarEfectoCorazones(evt) {
     if (messageElement) {
         messageElement.innerText = "Pase el cursor en la imagen";
     }
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarEfectoCorazones(imagenSal, hearts));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.AplicarEfectoCorazones(imagenSal, hearts));
 }
 function AplicarEfectoBurbuja(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
@@ -205,7 +205,7 @@ function AplicarEfectoBurbuja(evt) {
     if (messageElement) {
         messageElement.innerText = "Pase el cursor en la imagen";
     }
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
 }
 function AplicarEfectoFuego(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
@@ -215,7 +215,7 @@ function AplicarEfectoFuego(evt) {
     }
     var factorMovimiento = 0.05;
     var factorDetalle = 0.02;
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
 }
 function aplicarEfectoSimulacionCuantico(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
@@ -225,7 +225,7 @@ function aplicarEfectoSimulacionCuantico(evt) {
     }
     var factorMovimiento = 0.02; // movimiento
     var factorDetalle = 0.04; // detalle del efecto
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
 }
 var portalAnimationId = null;
 var portalStrength = 0;
@@ -247,7 +247,7 @@ function AnimarPortalAuto() {
     var deltaX = portalTargetX - lienzo2.width / 2;
     var deltaY = portalTargetY - lienzo2.height / 2;
     var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    portalStrength = Math.min(distance / 10, 100);
+    portalStrength = Math.min(distance / 20, 100);
     // aplicar efecto del portal de la imagen 
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
@@ -256,7 +256,7 @@ function AnimarPortalAuto() {
 }
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
-document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
+//document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', imgLocal.handleFileSelect, false);
 //Efectos  basicos
@@ -277,7 +277,7 @@ document.getElementById("op-sistema-solar").addEventListener("click", function (
     tiempoInicioAnimacion = Date.now();
     aplicarSistemaSolar(evt);
 }, false);
-document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
+document.getElementById("op-mosaicos").addEventListener('click', AplicarEfectoMosaicos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
 document.getElementById("op-portal").addEventListener('click', AnimarPortalAuto, false);
 //Efectos con Puntero
@@ -289,7 +289,7 @@ document.getElementById("op-corazones").addEventListener('click', function () {
     }
     hearts = []; // Reinicia la lista de corazones
     AplicarEfectoCorazones(event);
-    lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false);
+    lienzo3.addEventListener('mousemove', AplicarEfectoCorazones, false);
 });
 document.getElementById("op-burbuja").addEventListener('click', function () {
     var messageElement = document.getElementById("mensaje-efecto");
@@ -297,7 +297,7 @@ document.getElementById("op-burbuja").addEventListener('click', function () {
         messageElement.innerText = "Efecto de Burbuja activado. Pase el cursor en la imagen.";
     }
     AplicarEfectoBurbuja(event);
-    lienzo2.addEventListener('mousemove', function (evt) { return AplicarEfectoBurbuja(evt); }, false);
+    lienzo3.addEventListener('mousemove', function (evt) { return AplicarEfectoBurbuja(evt); }, false);
 });
 document.getElementById("op-fuego").addEventListener('click', function () {
     var messageElement = document.getElementById("mensaje-efecto");
@@ -305,7 +305,7 @@ document.getElementById("op-fuego").addEventListener('click', function () {
         messageElement.innerText = "Efecto de Fuego Fractal activado. Mueva el cursor para ver el fuego en acción.";
     }
     AplicarEfectoFuego(event);
-    lienzo2.addEventListener('mousemove', function (evt) { return AplicarEfectoFuego(evt); }, false);
+    lienzo3.addEventListener('mousemove', function (evt) { return AplicarEfectoFuego(evt); }, false);
 });
 document.getElementById("op-cuantico").addEventListener('click', function () {
     var messageElement = document.getElementById("mensaje-efecto");
@@ -313,5 +313,5 @@ document.getElementById("op-cuantico").addEventListener('click', function () {
         messageElement.innerText = "Efecto Cuantico activado. Mueva el cursor para experimentar el efecto.";
     }
     aplicarEfectoSimulacionCuantico(event);
-    lienzo2.addEventListener('mousemove', function (evt) { return aplicarEfectoSimulacionCuantico(evt); }, false);
+    lienzo3.addEventListener('mousemove', function (evt) { return aplicarEfectoSimulacionCuantico(evt); }, false);
 });

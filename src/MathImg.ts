@@ -1,5 +1,6 @@
 
 import { ImageType } from "./ImageType.js";
+//Estos son para el efecto de cursor corazon 
 export class Heart {
   x: number;
   y: number;
@@ -38,6 +39,7 @@ export class MathImg {
     }
     return arrImage;
   }
+  //efecto desenfoque
   public static aplicarDesenfoque(img: ImageType, radio: number): number[][][] {
     var arrImage = img.getArrayImg();
     var sal = this.initArray(img.getWidth(), img.getHeight());
@@ -125,7 +127,7 @@ public static pixelear(img: ImageType, blockSize: number): number[][][] {
 
   return sal;
 }
-
+//efecto sepia
 public static aplicarEfectoSepia(img: ImageType): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -158,6 +160,7 @@ private static aplicarEfectoSepiaEnPixel(arrImage: number[][][], x: number, y: n
 
   return pixel;
 }
+//efecto falla Glitch
 public static aplicarEfectoGlitch(img: ImageType, blockSize: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -210,6 +213,7 @@ public static aplicarEfectoGlitch(img: ImageType, blockSize: number): number[][]
 
   return sal;
 }
+//Efecto de destello foco
 public static aplicarDestelloDeFoco(img: ImageType, size: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -242,7 +246,7 @@ private static aplicarDestelloDeFocoEnPixel(arrImage: number[][][], x: number, y
 
   return pixel;
 }
-
+//efecto distorcion
 public static aplicarDistorsion(img: ImageType, factor: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -264,6 +268,7 @@ public static aplicarDistorsion(img: ImageType, factor: number): number[][][] {
 
   return sal;
 }
+//efecto vortice
 public static aplicarVortice(img: ImageType, centerX: number, centerY: number, strength: number, angle: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -295,7 +300,7 @@ public static aplicarVortice(img: ImageType, centerX: number, centerY: number, s
   return sal;
 }
 
-
+//efecto ondas 
 public static aplicarOndas(img: ImageType, amplitude: number, frequency: number, offset: number): number[][][] {
   const arrImage=img.getArrayImg();
   const width=img.getWidth();
@@ -317,6 +322,7 @@ public static aplicarOndas(img: ImageType, amplitude: number, frequency: number,
   }
   return sal;
 }
+//efecto zoom
 public static aplicarZoomDinamico(img: ImageType, scale: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width= img.getWidth();
@@ -342,7 +348,7 @@ public static aplicarZoomDinamico(img: ImageType, scale: number): number[][][] {
   }
   return sal;
 }
-
+//Efecto perturbacion
 public static aplicarPerturbacion(img: ImageType, amplitude: number, frequency: number, time: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -372,6 +378,7 @@ private static calcularOffset(amplitude: number, frequency: number, x: number, y
   const noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
   return amplitude * noise;
 }
+//Creando sistema solar
 public static crearSistemaSolar(img: ImageType, tiempo: number): number[][][] {
   const arrImage = img.getArrayImg();
   const width = img.getWidth();
@@ -438,8 +445,8 @@ private static dibujarCirculo(sal: number[][][], x: number, y: number, radio: nu
     }
   }
 }
-
-public static AplicarRemolinos(img: ImageType, strength: number, frequency: number, elapsed: number): number[][][] {
+//Aplicar efecto de mosaicos
+public static AplicarMosaicos(img: ImageType, strength: number, frequency: number, elapsed: number): number[][][] {
   const arrImage=img.getArrayImg();
   const sal=this.initArray(img.getWidth(),img.getHeight());
 
@@ -461,6 +468,7 @@ public static AplicarRemolinos(img: ImageType, strength: number, frequency: numb
   }
    return sal;
 }
+//Aplicar efecto Deformación Espejo Rotativo
 public static aplicarTransformacion(img: ImageType, centerX: number, centerY: number, scaleX: number, scaleY: number): number[][][] {
   const arrImage=img.getArrayImg();
   const width=img.getWidth();
@@ -481,6 +489,35 @@ public static aplicarTransformacion(img: ImageType, centerX: number, centerY: nu
   }
   return sal;
 }
+//Efecto de portal
+public static aplicarEfectoPortal(img: ImageType, strength: number, targetX: number, targetY: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const deltaX = j - targetX;
+      const deltaY = i - targetY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      const distortion = Math.sin(distance / strength);
+
+      const newX = j + distortion * (deltaX / distance) * strength;
+      const newY = i + distortion * (deltaY / distance) * strength;
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
+        sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
+        sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
+      }
+    }
+  }
+
+  return sal;
+}
+//Aplicar efecto de corazones
 public static AplicarEfectoCorazones(img: ImageType, hearts: Heart[]): number[][][] {
   const arrImage=img.getArrayImg();
   const width=img.getWidth();
@@ -708,34 +745,6 @@ public static aplicarEfectoSimulacionCuantico(img: ImageType, evt: any, factorMo
       }
     }
   }
-  return sal;
-}
-
-public static aplicarEfectoPortal(img: ImageType, strength: number, targetX: number, targetY: number): number[][][] {
-  const arrImage = img.getArrayImg();
-  const width = img.getWidth();
-  const height = img.getHeight();
-  const sal = this.initArray(width, height);
-
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      const deltaX = j - targetX;
-      const deltaY = i - targetY;
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-      const distortion = Math.sin(distance / strength);
-
-      const newX = j + distortion * (deltaX / distance) * strength;
-      const newY = i + distortion * (deltaY / distance) * strength;
-
-      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
-        sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
-        sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
-        sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
-      }
-    }
-  }
-
   return sal;
 }
 
