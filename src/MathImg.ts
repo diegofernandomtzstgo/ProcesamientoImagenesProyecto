@@ -710,4 +710,33 @@ public static aplicarEfectoSimulacionCuantico(img: ImageType, evt: any, factorMo
   }
   return sal;
 }
+
+public static aplicarEfectoPortal(img: ImageType, strength: number, targetX: number, targetY: number): number[][][] {
+  const arrImage = img.getArrayImg();
+  const width = img.getWidth();
+  const height = img.getHeight();
+  const sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const deltaX = j - targetX;
+      const deltaY = i - targetY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      const distortion = Math.sin(distance / strength);
+
+      const newX = j + distortion * (deltaX / distance) * strength;
+      const newY = i + distortion * (deltaY / distance) * strength;
+
+      if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+        sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
+        sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
+        sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
+      }
+    }
+  }
+
+  return sal;
+}
+
 }

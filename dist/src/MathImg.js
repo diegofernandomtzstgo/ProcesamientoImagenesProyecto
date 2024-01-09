@@ -603,6 +603,28 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    MathImg.aplicarEfectoPortal = function (img, strength, targetX, targetY) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - targetX;
+                var deltaY = i - targetY;
+                var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                var distortion = Math.sin(distance / strength);
+                var newX = j + distortion * (deltaX / distance) * strength;
+                var newY = i + distortion * (deltaY / distance) * strength;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                    sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                    sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                }
+            }
+        }
+        return sal;
+    };
     return MathImg;
 }());
 export { MathImg };
