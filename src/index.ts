@@ -301,6 +301,36 @@ function aplicarEfectoSimulacionCuantico(evt: any): void {
 
   imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
 }
+
+let portalAnimationId: number | null = null;
+let portalStrength = 0;
+let portalTargetX = 0;
+let portalTargetY = 0;
+const ctx2: CanvasRenderingContext2D = lienzo2.getContext('2d');
+
+function AnimarPortalAuto(): void {
+  // incrementa la posicion objetivo del portal automaticamente
+  portalTargetX += 1;
+  portalTargetY += 1;
+
+  // Reinicia el portal si alcanza los limites
+  if (portalTargetX > lienzo2.width + 120) {
+    portalTargetX = -120;
+  }
+  if (portalTargetY > lienzo2.height + 120) {
+    portalTargetY = -120;
+  }
+  // calculando la fuerxa del portal basamdonse  en la distancia entre la distancia de la posicion actual y la posición objetivo
+  const deltaX = portalTargetX - lienzo2.width / 2;
+  const deltaY = portalTargetY - lienzo2.height / 2;
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  portalStrength = Math.min(distance / 10, 100); 
+  // aplicar efecto del portal de la imagen 
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
+  // el bucle de anomacion
+  portalAnimationId = requestAnimationFrame(() => AnimarPortalAuto());
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -327,6 +357,7 @@ document.getElementById("op-sistema-solar").addEventListener("click", function(e
 }, false);
 document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
+document.getElementById("op-portal").addEventListener('click', AnimarPortalAuto, false);
 //Efectos con Puntero
 document.getElementById("op-corazones").addEventListener('click', () => {
   // Agrega un mensaje indicando que el efecto está activado
@@ -336,7 +367,7 @@ document.getElementById("op-corazones").addEventListener('click', () => {
   }
   hearts = []; // Reinicia la lista de corazones
   AplicarEfectoCorazones(event); 
-  lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false);
+  lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false); 
 });
 
 document.getElementById("op-burbuja").addEventListener('click', () => {
