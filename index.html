@@ -14,11 +14,11 @@
             <ul class="nav">
                 <li><span>INICIO</span>
                     <ul>           
-                        <li><label for="files" > Abrir archvivo</label></li>
+                        <li><label for="files" > Abrir archivo</label></li>
                         
                     </ul>
                 </li>
-                <li><span>Efectos básicos</span>
+                <li><span>Efectos Estáticos</span>
                     <ul>           
                         <li><span id="op-desenfoque">Desenfoque</span></li>
                         <li><span id="op-pixelate">Pixeleado</span></li>
@@ -36,7 +36,7 @@
                         <li><span id="op-zoom">Zoom Dinámico</span></li> 
                         <li><span id="op-perturbacion">Perturbación</span></li>
                         <li><span id="op-sistema-solar">Sistema Solar</span></li>
-                        <li><span id="op-remolino">Remolinos</span></li>
+                        <li><span id="op-mosaicos">Mosaicos</span></li>
                         <li><span id="op-estiramiento">Deformación Espejo Rotativo</span></li>
                         <li><span id="op-portal">Portal</span></li>
 
@@ -53,7 +53,7 @@
                 
             </ul>
         </header>
-        <section class="img-container1">Imagen 1
+        <section class="img-container1">Imagen de Entrada
             
             <div class="item img-item">
                 <canvas id="img1" width="300" height="300" crossorigin="anonymous"> </canvas>
@@ -73,30 +73,21 @@
                 <output id="list"></output>
             </div>
         </section> 
-        <section class="img-container2">Imagen 2
+        <section class="img-container2">Efectos en Movimiento
             <div class="item img-item">
                 <canvas id="img2" width="300" height="300"> </canvas>
             </div>
+
+        </section>
+        <section class="img-container3">Efectos Estáticos y De cursor 
+            <div class="item img-item">
+                <canvas id="img3" width="300" height="300"> </canvas>
+            </div>
+
+            </div>
             <div id="mensaje-efecto" class="message"></div>
         </section>
-        <section class="img-container3">Imagen 3 </section>
-        <section class="img-container4">Imagen 4
-            <div class="item img-item">
-                <canvas id="img4" width="300" height="300" crossorigin="anonymous"> </canvas>
-            </div>
-            <div class="item">
-                <div class="file-input-wrapper">
-                    <input class="file-input" type="file" id="files2" name="files" />
-                    <label for="files2" class="file-button">Examinar</label>
-                    <span class="file-name">Elige Archivo</span>
-                  </div>
-            </div>
-            <div class="item">
-                <output id="list2"></output>
-            </div>
-        </section>
-        <section class="img-container5">Imagen 5</section>
-        <section class="img-container6">Imagen 6</section>
+
     </section>
     <script src="dist/src/index.js"  type="module">
     

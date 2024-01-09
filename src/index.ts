@@ -1,16 +1,14 @@
 import { ImageLocal } from "./ImageLocal.js";
 import { ImageType } from "./ImageType.js";
 import { MathImg } from "./MathImg.js";
-import { Particle } from "./particle.js";
-import { ParticleText } from "./particle.js";
-import { CanvasLocal } from './canvasLocal.js';
+
 
 let lienzo1: HTMLCanvasElement;
 let lienzo2: HTMLCanvasElement;
-let lienzo4: HTMLCanvasElement;
+let lienzo3: HTMLCanvasElement;
 let pantalla1: CanvasRenderingContext2D;
 let pantalla2: CanvasRenderingContext2D;
-let pantalla4: CanvasRenderingContext2D;
+let pantalla3: CanvasRenderingContext2D;
 
 /* Este evento controla la forma de abrir un archivo mediante el evento de arrastrar y soltar */
 function handleDragOver(evt:any) {
@@ -26,14 +24,14 @@ lienzo1 = <HTMLCanvasElement>document.getElementById('img1');
 pantalla1 = lienzo1.getContext("2d");
 lienzo2 = <HTMLCanvasElement>document.getElementById('img2');
 pantalla2 = lienzo2.getContext("2d");
-lienzo4 = <HTMLCanvasElement>document.getElementById('img4');
-pantalla4 = lienzo4.getContext("2d");
+lienzo3 = <HTMLCanvasElement>document.getElementById('img3');
+pantalla3 = lienzo3.getContext("2d");
 
 var dropZone = lienzo1;//document.getElementById('img1');
 var imgLocal: ImageLocal = new ImageLocal(pantalla1);
 imgLocal.getImage().onload = imgLocal.onload;
-var imgLocal4: ImageLocal = new ImageLocal(pantalla4);
-imgLocal4.getImage().onload = imgLocal4.onload;
+//var imgLocal4: ImageLocal = new ImageLocal(pantalla3);
+//imgLocal4.getImage().onload = imgLocal4.onload;
 
 
 
@@ -42,22 +40,22 @@ imgLocal4.getImage().onload = imgLocal4.onload;
 function aplicarDesenfoque(evt: any): void {
   const radioDesenfoque = 1; 
   var imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDesenfoque(imagenSal, radioDesenfoque));
 }
 
 function pixelearImagen(evt: any): void {
   const blockSize = 10; // Tamaño del bloqur
   const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.pixelear(imagenSal, blockSize));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.pixelear(imagenSal, blockSize));
 }
 function aplicarEfectoSepia(evt: any): void {
   const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSepia(imagenSal));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSepia(imagenSal));
 }
 function aplicarEfectoGlitch(evt: any): void {
   const blockSize = 20; 
   const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoGlitch(imagenSal, blockSize));
 }
 function aplicarDestelloDeFoco(evt: any): void {
   const valorIngresado = prompt('Ingrese el valor numérico para el destello de foco (entre 10 y 100):');
@@ -66,7 +64,7 @@ function aplicarDestelloDeFoco(evt: any): void {
     const size = Math.min(100, Math.max(10, parseInt(valorIngresado, 10))) || 50;
 
     const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDestelloDeFoco(imagenSal, size));
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDestelloDeFoco(imagenSal, size));
   }
 }
 
@@ -74,10 +72,11 @@ function aplicarDistorsion(evt: any): void {
 
   const factorDistorsion = 0.5;
   const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
 
 
+//AQUI EMPIEZA LOS EFECTOS DE MOVIMIENTO
 let vorticeAngle = 0;
 let vorticeStrength = 0;
 let vorticeTime = 0;
@@ -177,7 +176,7 @@ function aplicarSistemaSolar(evt: any): void {
   });
 }
 
-function AplicarEfectoRemolinos(evt: any): void {
+function AplicarEfectoMosaicos(evt: any): void {
   const strength =10; 
   const frequency =0.01; 
 
@@ -192,7 +191,7 @@ function AplicarEfectoRemolinos(evt: any): void {
     const deltaTime = (currentTime - startTime)/1000; 
      elapsed+=deltaTime;
     const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarRemolinos(imagenSal, strength, frequency, elapsed));
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarMosaicos(imagenSal, strength, frequency, elapsed));
     requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
@@ -223,6 +222,37 @@ function AplicarEfectoEstiramiento(evt: any): void {
   };
   stretchEffect();
 }
+let portalAnimationId: number | null = null;
+let portalStrength = 0;
+let portalTargetX = 0;
+let portalTargetY = 0;
+const ctx2: CanvasRenderingContext2D = lienzo2.getContext('2d');
+
+function AnimarPortalAuto(): void {
+  // incrementa la posicion objetivo del portal automaticamente
+  portalTargetX += 1;
+  portalTargetY += 1;
+
+  // Reinicia el portal si alcanza los limites
+  if (portalTargetX > lienzo2.width + 120) {
+    portalTargetX = -120;
+  }
+  if (portalTargetY > lienzo2.height + 120) {
+    portalTargetY = -120;
+  }
+  // calculando la fuerxa del portal basamdonse  en la distancia entre la distancia de la posicion actual y la posición objetivo
+  const deltaX = portalTargetX - lienzo2.width / 2;
+  const deltaY = portalTargetY - lienzo2.height / 2;
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  portalStrength = Math.min(distance / 20, 100); 
+  // aplicar efecto del portal de la imagen 
+  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
+  // el bucle de anomacion
+  portalAnimationId = requestAnimationFrame(() => AnimarPortalAuto());
+}
+
+//AQUI EMPIEZA LOS EFECTOS DE CURSOR
 // Agrega una variable para almacenar los corazones en movimiento
 let hearts: Heart[] = [];
 class Heart {
@@ -262,7 +292,7 @@ function AplicarEfectoCorazones(evt: any): void {
   if (messageElement) {
     messageElement.innerText="Pase el cursor en la imagen";
   }
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.AplicarEfectoCorazones(imagenSal, hearts)) ;
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.AplicarEfectoCorazones(imagenSal, hearts)) ;
   
 }
 
@@ -273,7 +303,7 @@ function AplicarEfectoBurbuja(evt: any): void {
   if (messageElement) {
     messageElement.innerText = "Pase el cursor en la imagen";
   }
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoBurbuja(imagenSal, evt, 0.2, 90));
 }
 
 function AplicarEfectoFuego(evt: any): void {
@@ -286,7 +316,7 @@ function AplicarEfectoFuego(evt: any): void {
   const factorMovimiento = 0.05;
   const factorDetalle = 0.02; 
 
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoFuego(imagenSal, evt, factorMovimiento, factorDetalle));
 }
 
 function aplicarEfectoSimulacionCuantico(evt: any): void {
@@ -299,41 +329,11 @@ function aplicarEfectoSimulacionCuantico(evt: any): void {
   const factorMovimiento=0.02; // movimiento
   const factorDetalle=0.04; // detalle del efecto
 
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
-}
-
-let portalAnimationId: number | null = null;
-let portalStrength = 0;
-let portalTargetX = 0;
-let portalTargetY = 0;
-const ctx2: CanvasRenderingContext2D = lienzo2.getContext('2d');
-
-function AnimarPortalAuto(): void {
-  // incrementa la posicion objetivo del portal automaticamente
-  portalTargetX += 1;
-  portalTargetY += 1;
-
-  // Reinicia el portal si alcanza los limites
-  if (portalTargetX > lienzo2.width + 120) {
-    portalTargetX = -120;
-  }
-  if (portalTargetY > lienzo2.height + 120) {
-    portalTargetY = -120;
-  }
-  // calculando la fuerxa del portal basamdonse  en la distancia entre la distancia de la posicion actual y la posición objetivo
-  const deltaX = portalTargetX - lienzo2.width / 2;
-  const deltaY = portalTargetY - lienzo2.height / 2;
-  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  portalStrength = Math.min(distance / 10, 100); 
-  // aplicar efecto del portal de la imagen 
-  const imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-  imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
-  // el bucle de anomacion
-  portalAnimationId = requestAnimationFrame(() => AnimarPortalAuto());
+  imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
 }
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
-document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
+//document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', imgLocal.handleFileSelect, false);
 
@@ -355,7 +355,7 @@ document.getElementById("op-sistema-solar").addEventListener("click", function(e
   tiempoInicioAnimacion = Date.now();
   aplicarSistemaSolar(evt);
 }, false);
-document.getElementById("op-remolino").addEventListener('click', AplicarEfectoRemolinos, false);
+document.getElementById("op-mosaicos").addEventListener('click', AplicarEfectoMosaicos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
 document.getElementById("op-portal").addEventListener('click', AnimarPortalAuto, false);
 //Efectos con Puntero
@@ -365,9 +365,9 @@ document.getElementById("op-corazones").addEventListener('click', () => {
   if (messageElement) {
     messageElement.innerText = "Efecto de vórtice activado. Pase el cursor en la imagen.";
   }
-  hearts = []; // Reinicia la lista de corazones
+  hearts = []; // reinicia la lista de corazones
   AplicarEfectoCorazones(event); 
-  lienzo2.addEventListener('mousemove', AplicarEfectoCorazones, false); 
+  lienzo3.addEventListener('mousemove', AplicarEfectoCorazones, false); 
 });
 
 document.getElementById("op-burbuja").addEventListener('click', () => {
@@ -376,7 +376,7 @@ document.getElementById("op-burbuja").addEventListener('click', () => {
     messageElement.innerText = "Efecto de Burbuja activado. Pase el cursor en la imagen.";
   }
   AplicarEfectoBurbuja(event); 
-  lienzo2.addEventListener('mousemove', (evt) => AplicarEfectoBurbuja(evt), false);
+  lienzo3.addEventListener('mousemove', (evt) => AplicarEfectoBurbuja(evt), false);
 });
 document.getElementById("op-fuego").addEventListener('click', () => {
   const messageElement = document.getElementById("mensaje-efecto");
@@ -384,7 +384,7 @@ document.getElementById("op-fuego").addEventListener('click', () => {
     messageElement.innerText = "Efecto de Fuego Fractal activado. Mueva el cursor para ver el fuego en acción.";
   }
   AplicarEfectoFuego(event);
-  lienzo2.addEventListener('mousemove', (evt) => AplicarEfectoFuego(evt), false);
+  lienzo3.addEventListener('mousemove', (evt) => AplicarEfectoFuego(evt), false);
 });
 document.getElementById("op-cuantico").addEventListener('click', () => {
   const messageElement=document.getElementById("mensaje-efecto");
@@ -392,5 +392,5 @@ document.getElementById("op-cuantico").addEventListener('click', () => {
     messageElement.innerText="Efecto Cuantico activado. Mueva el cursor para experimentar el efecto.";
   }
   aplicarEfectoSimulacionCuantico(event);
-  lienzo2.addEventListener('mousemove', (evt) => aplicarEfectoSimulacionCuantico(evt), false);
+  lienzo3.addEventListener('mousemove', (evt) => aplicarEfectoSimulacionCuantico(evt), false);
 });
