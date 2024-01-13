@@ -331,6 +331,24 @@ function aplicarEfectoSimulacionCuantico(evt: any): void {
 
   imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
 }
+
+let duracion= 0;
+
+function AplicarOndasCuadradas(): void {
+    duracion +=0.1;
+    var imagenSal: ImageType =new ImageType(pantalla1,imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.movimientoCuadrados(imagenSal,duracion));
+    requestAnimationFrame(AplicarOndasCuadradas);
+}
+
+let duracionOndulacion= 0;
+function AplicarOndulacion(): void {
+    duracionOndulacion += 0.1;
+    var imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.ondulacion(imagenSal,duracionOndulacion,20)); // ajustar amplitud
+    requestAnimationFrame(AplicarOndulacion);
+}
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 //document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -358,6 +376,9 @@ document.getElementById("op-sistema-solar").addEventListener("click", function(e
 document.getElementById("op-mosaicos").addEventListener('click', AplicarEfectoMosaicos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
 document.getElementById("op-portal").addEventListener('click', AnimarPortalAuto, false);
+document.getElementById("op-movimientoCuadrado").addEventListener('click', AplicarOndasCuadradas, false);
+document.getElementById("op-ondulacion").addEventListener('click',AplicarOndulacion, false);
+
 //Efectos con Puntero
 document.getElementById("op-corazones").addEventListener('click', () => {
   // Agrega un mensaje indicando que el efecto está activado

@@ -1,3 +1,4 @@
+//Estos son para el efecto de cursor corazon 
 var Heart = /** @class */ (function () {
     function Heart(x, y, size, speedX, speedY) {
         this.x = x;
@@ -31,6 +32,7 @@ var MathImg = /** @class */ (function () {
         }
         return arrImage;
     };
+    //efecto desenfoque
     MathImg.aplicarDesenfoque = function (img, radio) {
         var arrImage = img.getArrayImg();
         var sal = this.initArray(img.getWidth(), img.getHeight());
@@ -102,6 +104,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //efecto sepia
     MathImg.aplicarEfectoSepia = function (img) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -127,6 +130,7 @@ var MathImg = /** @class */ (function () {
         pixel[2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
         return pixel;
     };
+    //efecto falla Glitch
     MathImg.aplicarEfectoGlitch = function (img, blockSize) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -172,6 +176,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //Efecto de destello foco
     MathImg.aplicarDestelloDeFoco = function (img, size) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -198,6 +203,7 @@ var MathImg = /** @class */ (function () {
         }
         return pixel;
     };
+    //efecto distorcion
     MathImg.aplicarDistorsion = function (img, factor) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -216,6 +222,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //efecto vortice
     MathImg.aplicarVortice = function (img, centerX, centerY, strength, angle) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -240,6 +247,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //efecto ondas 
     MathImg.aplicarOndas = function (img, amplitude, frequency, offset) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -259,6 +267,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //efecto zoom
     MathImg.aplicarZoomDinamico = function (img, scale) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -281,6 +290,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //Efecto perturbacion
     MathImg.aplicarPerturbacion = function (img, amplitude, frequency, time) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -305,6 +315,7 @@ var MathImg = /** @class */ (function () {
         var noise = Math.sin(frequency * x + time) + Math.cos(frequency * y + time);
         return amplitude * noise;
     };
+    //Creando sistema solar
     MathImg.crearSistemaSolar = function (img, tiempo) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -373,6 +384,7 @@ var MathImg = /** @class */ (function () {
             _loop_1(i);
         }
     };
+    //Aplicar efecto de mosaicos
     MathImg.AplicarMosaicos = function (img, strength, frequency, elapsed) {
         var arrImage = img.getArrayImg();
         var sal = this.initArray(img.getWidth(), img.getHeight());
@@ -392,6 +404,7 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //Aplicar efecto Deformación Espejo Rotativo
     MathImg.aplicarTransformacion = function (img, centerX, centerY, scaleX, scaleY) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -412,6 +425,30 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    //Efecto de portal
+    MathImg.aplicarEfectoPortal = function (img, strength, targetX, targetY) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                var deltaX = j - targetX;
+                var deltaY = i - targetY;
+                var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                var distortion = Math.sin(distance / strength);
+                var newX = j + distortion * (deltaX / distance) * strength;
+                var newY = i + distortion * (deltaY / distance) * strength;
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
+                    sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                    sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                    sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
+                }
+            }
+        }
+        return sal;
+    };
+    //Aplicar efecto de corazones
     MathImg.AplicarEfectoCorazones = function (img, hearts) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
@@ -603,24 +640,46 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
-    MathImg.aplicarEfectoPortal = function (img, strength, targetX, targetY) {
+    //Olas de cuadros
+    MathImg.movimientoCuadrados = function (img, tiempo) {
         var arrImage = img.getArrayImg();
         var width = img.getWidth();
         var height = img.getHeight();
         var sal = this.initArray(width, height);
         for (var i = 0; i < height; i++) {
             for (var j = 0; j < width; j++) {
-                var deltaX = j - targetX;
-                var deltaY = i - targetY;
-                var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                var distortion = Math.sin(distance / strength);
-                var newX = j + distortion * (deltaX / distance) * strength;
-                var newY = i + distortion * (deltaY / distance) * strength;
-                if (newX >= 0 && newX < width && newY >= 0 && newY < height) {
-                    sal[0][i][j] = this.clamp(arrImage[0][Math.floor(newY)][Math.floor(newX)], 0, 255);
-                    sal[1][i][j] = this.clamp(arrImage[1][Math.floor(newY)][Math.floor(newX)], 0, 255);
-                    sal[2][i][j] = this.clamp(arrImage[2][Math.floor(newY)][Math.floor(newX)], 0, 255);
-                }
+                // dezplazamientios basados en el tiempo
+                var offsetX = Math.sin(tiempo + j * 0.1) * 10;
+                var offsetY = Math.cos(tiempo + i * 0.1) * 10;
+                //  nuevas coordenadas
+                var newX = Math.floor(j + offsetX);
+                var newY = Math.floor(i + offsetY);
+                // limites
+                newX = Math.max(0, Math.min(width - 1, newX));
+                newY = Math.max(0, Math.min(height - 1, newY));
+                sal[0][i][j] = arrImage[0][newY][newX];
+                sal[1][i][j] = arrImage[1][newY][newX];
+                sal[2][i][j] = arrImage[2][newY][newX];
+            }
+        }
+        return sal;
+    };
+    //Ondulacion
+    MathImg.ondulacion = function (img, tiempo, amplitud) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                // Aplicar lo que es la ondulacion
+                var offsetY = Math.sin(tiempo + j * 0.1) * amplitud;
+                var newY = Math.floor(i + offsetY);
+                // Checar limites
+                newY = Math.max(0, Math.min(height - 1, newY));
+                sal[0][i][j] = arrImage[0][newY][j];
+                sal[1][i][j] = arrImage[1][newY][j];
+                sal[2][i][j] = arrImage[2][newY][j];
             }
         }
         return sal;
