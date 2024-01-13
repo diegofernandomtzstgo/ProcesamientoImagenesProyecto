@@ -59,6 +59,7 @@ function aplicarDistorsion(evt) {
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
     imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarDistorsion(imagenSal, factorDistorsion));
 }
+//AQUI EMPIEZA LOS EFECTOS DE MOVIMIENTO
 var vorticeAngle = 0;
 var vorticeStrength = 0;
 var vorticeTime = 0;
@@ -165,6 +166,34 @@ function AplicarEfectoEstiramiento(evt) {
     };
     stretchEffect();
 }
+var portalAnimationId = null;
+var portalStrength = 0;
+var portalTargetX = 0;
+var portalTargetY = 0;
+var ctx2 = lienzo2.getContext('2d');
+function AnimarPortalAuto() {
+    // incrementa la posicion objetivo del portal automaticamente
+    portalTargetX += 1;
+    portalTargetY += 1;
+    // Reinicia el portal si alcanza los limites
+    if (portalTargetX > lienzo2.width + 120) {
+        portalTargetX = -120;
+    }
+    if (portalTargetY > lienzo2.height + 120) {
+        portalTargetY = -120;
+    }
+    // calculando la fuerxa del portal basamdonse  en la distancia entre la distancia de la posicion actual y la posición objetivo
+    var deltaX = portalTargetX - lienzo2.width / 2;
+    var deltaY = portalTargetY - lienzo2.height / 2;
+    var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    portalStrength = Math.min(distance / 20, 100);
+    // aplicar efecto del portal de la imagen 
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
+    // el bucle de anomacion
+    portalAnimationId = requestAnimationFrame(function () { return AnimarPortalAuto(); });
+}
+//AQUI EMPIEZA LOS EFECTOS DE CURSOR
 // Agrega una variable para almacenar los corazones en movimiento
 var hearts = [];
 var Heart = /** @class */ (function () {
@@ -227,32 +256,19 @@ function aplicarEfectoSimulacionCuantico(evt) {
     var factorDetalle = 0.04; // detalle del efecto
     imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
 }
-var portalAnimationId = null;
-var portalStrength = 0;
-var portalTargetX = 0;
-var portalTargetY = 0;
-var ctx2 = lienzo2.getContext('2d');
-function AnimarPortalAuto() {
-    // incrementa la posicion objetivo del portal automaticamente
-    portalTargetX += 1;
-    portalTargetY += 1;
-    // Reinicia el portal si alcanza los limites
-    if (portalTargetX > lienzo2.width + 120) {
-        portalTargetX = -120;
-    }
-    if (portalTargetY > lienzo2.height + 120) {
-        portalTargetY = -120;
-    }
-    // calculando la fuerxa del portal basamdonse  en la distancia entre la distancia de la posicion actual y la posición objetivo
-    var deltaX = portalTargetX - lienzo2.width / 2;
-    var deltaY = portalTargetY - lienzo2.height / 2;
-    var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    portalStrength = Math.min(distance / 20, 100);
-    // aplicar efecto del portal de la imagen 
+var duracion = 0;
+function AplicarOndasCuadradas() {
+    duracion += 0.1;
     var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.aplicarEfectoPortal(imagenSal, portalStrength, portalTargetX, portalTargetY));
-    // el bucle de anomacion
-    portalAnimationId = requestAnimationFrame(function () { return AnimarPortalAuto(); });
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.movimientoCuadrados(imagenSal, duracion));
+    requestAnimationFrame(AplicarOndasCuadradas);
+}
+var duracionOndulacion = 0;
+function AplicarOndulacion() {
+    duracionOndulacion += 0.1;
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.ondulacion(imagenSal, duracionOndulacion, 20)); // ajustar amplitud
+    requestAnimationFrame(AplicarOndulacion);
 }
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
@@ -280,6 +296,8 @@ document.getElementById("op-sistema-solar").addEventListener("click", function (
 document.getElementById("op-mosaicos").addEventListener('click', AplicarEfectoMosaicos, false);
 document.getElementById("op-estiramiento").addEventListener('click', AplicarEfectoEstiramiento, false);
 document.getElementById("op-portal").addEventListener('click', AnimarPortalAuto, false);
+document.getElementById("op-movimientoCuadrado").addEventListener('click', AplicarOndasCuadradas, false);
+document.getElementById("op-ondulacion").addEventListener('click', AplicarOndulacion, false);
 //Efectos con Puntero
 document.getElementById("op-corazones").addEventListener('click', function () {
     // Agrega un mensaje indicando que el efecto está activado
@@ -287,7 +305,7 @@ document.getElementById("op-corazones").addEventListener('click', function () {
     if (messageElement) {
         messageElement.innerText = "Efecto de vórtice activado. Pase el cursor en la imagen.";
     }
-    hearts = []; // Reinicia la lista de corazones
+    hearts = []; // reinicia la lista de corazones
     AplicarEfectoCorazones(event);
     lienzo3.addEventListener('mousemove', AplicarEfectoCorazones, false);
 });
