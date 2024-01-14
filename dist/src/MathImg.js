@@ -684,6 +684,34 @@ var MathImg = /** @class */ (function () {
         }
         return sal;
     };
+    MathImg.AplicarEfectoOndulado = function (img, mouseX, mouseY) {
+        var arrImage = img.getArrayImg();
+        var width = img.getWidth();
+        var height = img.getHeight();
+        var sal = this.initArray(width, height);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                // Distancia entre el puntero del mouse y el pixel actual
+                var distancia = Math.sqrt(Math.pow(mouseX - j, 2) + Math.pow(mouseY - i, 2));
+                // parametros para el ondulado
+                var amplitud = 60;
+                var frecuencia = 0.1;
+                // se aplice el efecto basado en la distancia
+                var offsetX = Math.sin(distancia * frecuencia) * amplitud;
+                var offsetY = Math.cos(distancia * frecuencia) * amplitud;
+                // nueva ubi
+                var newX = Math.floor(j + offsetX);
+                var newY = Math.floor(i + offsetY);
+                // cehecar los limites
+                newX = Math.max(0, Math.min(width - 1, newX));
+                newY = Math.max(0, Math.min(height - 1, newY));
+                sal[0][i][j] = arrImage[0][newY][newX];
+                sal[1][i][j] = arrImage[1][newY][newX];
+                sal[2][i][j] = arrImage[2][newY][newX];
+            }
+        }
+        return sal;
+    };
     return MathImg;
 }());
 export { MathImg };

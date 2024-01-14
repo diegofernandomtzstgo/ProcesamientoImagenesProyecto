@@ -270,6 +270,16 @@ function AplicarOndulacion() {
     imagenSal.imageArray2DtoData(pantalla2, MathImg.ondulacion(imagenSal, duracionOndulacion, 20)); // ajustar amplitud
     requestAnimationFrame(AplicarOndulacion);
 }
+function aplicarEfectoOndulado(evt) {
+    var imagenSal = new ImageType(pantalla1, imgLocal.getImage());
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Mueva el cursor para ver el efecto de remolino ondulado.";
+    }
+    var mouseX = evt.clientX - lienzo3.getBoundingClientRect().left;
+    var mouseY = evt.clientY - lienzo3.getBoundingClientRect().top;
+    imagenSal.imageArray2DtoData(pantalla3, MathImg.AplicarEfectoOndulado(imagenSal, mouseX, mouseY));
+}
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 //document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -332,4 +342,12 @@ document.getElementById("op-cuantico").addEventListener('click', function () {
     }
     aplicarEfectoSimulacionCuantico(event);
     lienzo3.addEventListener('mousemove', function (evt) { return aplicarEfectoSimulacionCuantico(evt); }, false);
+});
+document.getElementById("op-Ondulado").addEventListener('click', function () {
+    var messageElement = document.getElementById("mensaje-efecto");
+    if (messageElement) {
+        messageElement.innerText = "Efecto Remolino Ondulado activado. Mueva el cursor para experimentar el efecto.";
+    }
+    aplicarEfectoOndulado(event);
+    lienzo3.addEventListener('mousemove', function (evt) { return aplicarEfectoOndulado(evt); }, false);
 });
