@@ -349,6 +349,19 @@ function AplicarOndulacion(): void {
     requestAnimationFrame(AplicarOndulacion);
 }
 
+function aplicarEfectoOndulado(evt: any): void {
+  const imagenSal: ImageType=new ImageType(pantalla1, imgLocal.getImage());
+  const messageElement=document.getElementById("mensaje-efecto");
+
+  if (messageElement) {
+    messageElement.innerText = "Mueva el cursor para ver el efecto de remolino ondulado.";
+  }
+
+  let mouseX=evt.clientX -lienzo3.getBoundingClientRect().left;
+  let mouseY=evt.clientY -lienzo3.getBoundingClientRect().top;
+  imagenSal.imageArray2DtoData(pantalla3,MathImg.AplicarEfectoOndulado(imagenSal, mouseX, mouseY));
+}
+
 lienzo1.addEventListener("mousemove", imgLocal.drawSmallImg);
 document.getElementById('files').addEventListener('change', imgLocal.handleFileSelect, false);
 //document.getElementById('files2').addEventListener('change', imgLocal4.handleFileSelect, false);
@@ -414,4 +427,13 @@ document.getElementById("op-cuantico").addEventListener('click', () => {
   }
   aplicarEfectoSimulacionCuantico(event);
   lienzo3.addEventListener('mousemove', (evt) => aplicarEfectoSimulacionCuantico(evt), false);
+});
+document.getElementById("op-Ondulado").addEventListener('click', () => {
+  const messageElement = document.getElementById("mensaje-efecto");
+  if (messageElement) {
+    messageElement.innerText = "Efecto Remolino Ondulado activado. Mueva el cursor para experimentar el efecto.";
+  }
+  aplicarEfectoOndulado(event);
+  lienzo3.addEventListener('mousemove', (evt) => aplicarEfectoOndulado(evt), false);
+
 });
