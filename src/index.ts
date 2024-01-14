@@ -252,6 +252,25 @@ function AnimarPortalAuto(): void {
   portalAnimationId = requestAnimationFrame(() => AnimarPortalAuto());
 }
 
+
+let duracion= 0;
+
+function AplicarOndasCuadradas(): void {
+    duracion +=0.1;
+    var imagenSal: ImageType =new ImageType(pantalla1,imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.movimientoCuadrados(imagenSal,duracion));
+    requestAnimationFrame(AplicarOndasCuadradas);
+}
+
+let duracionOndulacion= 0;
+function AplicarOndulacion(): void {
+    duracionOndulacion += 0.1;
+    var imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
+    imagenSal.imageArray2DtoData(pantalla2, MathImg.ondulacion(imagenSal,duracionOndulacion,20)); // ajustar amplitud
+    requestAnimationFrame(AplicarOndulacion);
+}
+
+
 //AQUI EMPIEZA LOS EFECTOS DE CURSOR
 // Agrega una variable para almacenar los corazones en movimiento
 let hearts: Heart[] = [];
@@ -330,23 +349,6 @@ function aplicarEfectoSimulacionCuantico(evt: any): void {
   const factorDetalle=0.04; // detalle del efecto
 
   imagenSal.imageArray2DtoData(pantalla3, MathImg.aplicarEfectoSimulacionCuantico(imagenSal, evt, factorMovimiento, factorDetalle));
-}
-
-let duracion= 0;
-
-function AplicarOndasCuadradas(): void {
-    duracion +=0.1;
-    var imagenSal: ImageType =new ImageType(pantalla1,imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.movimientoCuadrados(imagenSal,duracion));
-    requestAnimationFrame(AplicarOndasCuadradas);
-}
-
-let duracionOndulacion= 0;
-function AplicarOndulacion(): void {
-    duracionOndulacion += 0.1;
-    var imagenSal: ImageType = new ImageType(pantalla1, imgLocal.getImage());
-    imagenSal.imageArray2DtoData(pantalla2, MathImg.ondulacion(imagenSal,duracionOndulacion,20)); // ajustar amplitud
-    requestAnimationFrame(AplicarOndulacion);
 }
 
 function aplicarEfectoOndulado(evt: any): void {

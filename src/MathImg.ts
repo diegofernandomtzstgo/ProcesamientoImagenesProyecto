@@ -517,6 +517,56 @@ public static aplicarEfectoPortal(img: ImageType, strength: number, targetX: num
 
   return sal;
 }
+//Olas de cuadros
+public static movimientoCuadrados(img: ImageType, tiempo: number): number[][][] {
+  var arrImage = img.getArrayImg();
+  var width = img.getWidth();
+  var height = img.getHeight();
+  var sal = this.initArray(width, height);
+
+  for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+          // dezplazamientios basados en el tiempo
+          let offsetX = Math.sin(tiempo + j * 0.1) * 10; 
+          let offsetY = Math.cos(tiempo + i * 0.1) * 10;
+
+          //  nuevas coordenadas
+          let newX = Math.floor(j + offsetX);
+          let newY = Math.floor(i + offsetY);
+
+          // limites
+          newX = Math.max(0, Math.min(width - 1, newX));
+          newY = Math.max(0, Math.min(height - 1, newY));
+          sal[0][i][j] = arrImage[0][newY][newX];
+          sal[1][i][j] = arrImage[1][newY][newX];
+          sal[2][i][j] = arrImage[2][newY][newX];
+      }
+  }
+  return sal;
+}
+//Ondulacion
+public static ondulacion(img: ImageType,tiempo: number, amplitud: number): number[][][] {
+var arrImage=img.getArrayImg();
+var width=img.getWidth();
+var height=img.getHeight();
+var sal=this.initArray(width, height);
+
+for (let i =0; i < height;i++) {
+    for (let j =0; j< width;j++) {
+        // Aplicar lo que es la ondulacion
+        let offsetY = Math.sin(tiempo + j * 0.1) * amplitud;
+        let newY = Math.floor(i + offsetY);
+        // Checar limites
+        newY = Math.max(0, Math.min(height - 1, newY));
+        
+        sal[0][i][j] = arrImage[0][newY][j];
+        sal[1][i][j] = arrImage[1][newY][j];
+        sal[2][i][j] = arrImage[2][newY][j];
+    }
+}
+return sal;
+}
+
 //Aplicar efecto de corazones
 public static AplicarEfectoCorazones(img: ImageType, hearts: Heart[]): number[][][] {
   const arrImage=img.getArrayImg();
@@ -747,55 +797,6 @@ public static aplicarEfectoSimulacionCuantico(img: ImageType, evt: any, factorMo
   }
   return sal;
 }
-//Olas de cuadros
-public static movimientoCuadrados(img: ImageType, tiempo: number): number[][][] {
-    var arrImage = img.getArrayImg();
-    var width = img.getWidth();
-    var height = img.getHeight();
-    var sal = this.initArray(width, height);
-
-    for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
-            // dezplazamientios basados en el tiempo
-            let offsetX = Math.sin(tiempo + j * 0.1) * 10; 
-            let offsetY = Math.cos(tiempo + i * 0.1) * 10;
-
-            //  nuevas coordenadas
-            let newX = Math.floor(j + offsetX);
-            let newY = Math.floor(i + offsetY);
-
-            // limites
-            newX = Math.max(0, Math.min(width - 1, newX));
-            newY = Math.max(0, Math.min(height - 1, newY));
-            sal[0][i][j] = arrImage[0][newY][newX];
-            sal[1][i][j] = arrImage[1][newY][newX];
-            sal[2][i][j] = arrImage[2][newY][newX];
-        }
-    }
-    return sal;
-}
-//Ondulacion
-public static ondulacion(img: ImageType,tiempo: number, amplitud: number): number[][][] {
-  var arrImage=img.getArrayImg();
-  var width=img.getWidth();
-  var height=img.getHeight();
-  var sal=this.initArray(width, height);
-
-  for (let i =0; i < height;i++) {
-      for (let j =0; j< width;j++) {
-          // Aplicar lo que es la ondulacion
-          let offsetY = Math.sin(tiempo + j * 0.1) * amplitud;
-          let newY = Math.floor(i + offsetY);
-          // Checar limites
-          newY = Math.max(0, Math.min(height - 1, newY));
-          
-          sal[0][i][j] = arrImage[0][newY][j];
-          sal[1][i][j] = arrImage[1][newY][j];
-          sal[2][i][j] = arrImage[2][newY][j];
-      }
-  }
-  return sal;
-}
 
 public static AplicarEfectoOndulado(img: ImageType, mouseX: number, mouseY: number): number[][][] {
   var arrImage=img.getArrayImg();
@@ -809,7 +810,7 @@ public static AplicarEfectoOndulado(img: ImageType, mouseX: number, mouseY: numb
           let distancia = Math.sqrt(Math.pow(mouseX-j,2) + Math.pow(mouseY-i, 2));
 
           // parametros para el ondulado
-          let amplitud=60;
+           let amplitud=60;
           let frecuencia=0.1;
 
           // se aplice el efecto basado en la distancia
