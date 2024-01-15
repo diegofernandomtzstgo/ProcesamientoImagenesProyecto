@@ -9,26 +9,45 @@ display: grid;
 grid-template: 56px 400px 350px/ 1fr 1fr 1fr;
 margin:0 auto;
 grid-template-areas: "header header header"
-                     "img-container1 img-container2 img-container3"
-                     "img-container4 img-container5 img-container6";
+                     "img-container1 img-container2 img-container3";
 }
-/*header{
-  font-family: Courier ,Verdana, Arial, Helvetica, sans-serif;
-  background-color: #FFFFFF;
-  text-align: center;
-  color: #0866FF;
-}*/
+.img-container1,
+.img-container2,
+.img-container3 {
+  margin-top: 25px;
+  background-color: #ffffff;
+  padding: 10px;
+  border: 1px solid #000; 
+  margin-left: 5px;
+}
+center{
+  background-color: #ffffff;
+}
+
+/* estilos generales para las imágenes */
+.img-item {
+  border: 1px solid #000; 
+  margin: 10px;
+  padding: 10px;
+  text-align: center; /* Centra el contenido */
+}
+
+#item {
+  margin-top: 20px; 
+}
+
+
 .header{
 width: 100%;
 height: 500px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 grid-area: header;
 
-text-align: center; /* Center the nav items within this container */
+text-align: center; 
 }
 .nav {
 display: flex;
-justify-content: space-between; /* Distribute items evenly */
+justify-content: space-between; 
 background-color: #FFFFFF;
 }
 ul{
@@ -116,9 +135,9 @@ background-color: black;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px; /* Ajusta la distancia hacia abajo según sea necesario */
+  margin-top: 10px; /* Ajusta la distancia hacia abajo */
   border: 1px solid #000000;
-  margin-left: 5px; /* Ajusta la sangría hacia la derecha según sea necesario */
+  margin-left: 5px; /* Ajusta la sangría  */
 }
 .file-button:hover {
   background-color: #45a049; /* Cambia el color de fondo al pasar el ratón sobre el botón */
